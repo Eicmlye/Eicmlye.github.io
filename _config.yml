@@ -1,35 +1,47 @@
+## This file defines attributes of variable "site",
+  # and can be used as "site.ATTR" in other files.
+## All files (excluding subdirectories) in the same directory as _config.yml
+  # will be element in the variable "site.pages".
+## In each file in site.pages, the variable "page" indicates the file itself,
+  # and its own attributes can therefore be applied.
+  # The attributes should be defined at the very beginning of the file,
+  # included in a pair of lines of "---". 
+
 # Site settings
+# Variables here will appear as site.var in html files
+# You can search "site.var" in the project and find where and how they are used
 title: EM
 UserName: Eicmlye # EM added
 SEOTitle: Eicmlye | EM Blog
-header-img: img/em/em-home-bg.png
+header-img: img/em/em-home-bg.png # this image will replace header image if other pages haven't got one
 email: 5356682885@qq.com
-description: ""
+description:
 keyword: "EM, Eicmlye, EM Blog"
-url: "http://Eicmlye.github.io"          # your host, for absolute URL
-baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
+url: "http://Eicmlye.github.io"          # your host, absolute URL
+baseurl:       # for example, '/blog' if your blog hosted on 'host/blog'
 github_repo: "https://github.com/Eicmlye/Eicmlye.github.io.git" # your code repository
 
 # Sidebar settings
-sidebar: true                           # whether or not using Sidebar.
+sidebar: true                           # true for enabling Sidebar.
 sidebar-about-description: "Think only of the best. "
-sidebar-avatar: /img/em/em-avatar.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: /img/em/em-avatar.jpg   # use absolute URL, seeing it's used in both `/` and `/about/`
 
 # SNS settings
 RSS: false
 # weibo_username:
-zhihu_username:     eicmlye
-github_username:    Eicmlye
-#facebook_username:
-#jianshu_username:
-#twitter_username:
+zhihu_username:     eicmlye   # all letters in lower case
+github_username:    Eicmlye   # case sensitive
+# facebook_username:
+# jianshu_username:
+# twitter_username:
 
 # Build settings
 # from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
 permalink: pretty
-paginate: 10
+paginate: 10        # numbers of posts per page shown on your homepage
+# The directories and files below will not be included in the variable site.pages
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","exclude"]
-anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
+anchorjs: true      # if you want to customize anchor. check out line:181 of `post.html`
 
 # Gems
 # from PR#40, to support local preview for Jekyll 3.0
@@ -51,7 +63,7 @@ kramdown:
 
 # Gitalk
 gitalk:
-  enable: false    # 是否开启 Gitalk 评论
+  enable: false    # true for enabling Gitalk Comments
   # clientID: f2c84e7629bb1446c1a4                            # 生成的 clientID
   # clientSecret: ca6d6139d1e1b8c43f8b2e19492ddcac8b322d0d    # 生成的 clientSecret
   # repo: Eicmlye.github.io    # 仓库名称
@@ -66,12 +78,12 @@ gitalk:
 ba_track_id:
 
 # Google Analytics
-ga_track_id: ''            # Format: UA-xxxxxx-xx
+ga_track_id:                 # Format: UA-xxxxxx-xx
 ga_domain: auto              # 默认的是 auto, 也可改为自定义的域名
 
 # Featured Tags
-featured-tags: true                     # 是否使用首页标签
-featured-condition-size: 1              # 相同标签数量大于这个数, 才会出现在首页
+featured-tags: true                     # true for enabling homepage tag recommendation
+featured-condition-size: 2              # least number of posts for a tag to be shown
 
 # Progressive Web Apps
 chrome-tab-theme-color: "#000000"
