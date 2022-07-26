@@ -1,0 +1,85 @@
+# Site settings
+title: EM
+SEOTitle: Eicmlye | EM Blog
+header-img: img/em/em-home-bg.png
+email: 5356682885@qq.com
+description: ""
+keyword: "EM, Eicmlye, EM Blog"
+url: "http://Eicmlye.github.io"          # your host, for absolute URL
+baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
+github_repo: "https://github.com/Eicmlye/Eicmlye.github.io.git" # your code repository
+
+# Sidebar settings
+sidebar: true                           # whether or not using Sidebar.
+sidebar-about-description: "Think only of the best. "
+sidebar-avatar: /img/em/em-avatar.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+
+# SNS settings
+RSS: false
+# weibo_username:
+zhihu_username:     eicmlye
+github_username:    Eicmlye
+#facebook_username:
+#jianshu_username:
+#twitter_username:
+
+# Build settings
+# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
+permalink: pretty
+paginate: 10
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","exclude"]
+anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
+
+# Gems
+# from PR#40, to support local preview for Jekyll 3.0
+gems: [jekyll-paginate]
+
+# Markdown settings
+# replace redcarpet to kramdown,
+# although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
+# document: http://jekyllrb.com/docs/configuration/#kramdown
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM                            # use Github Flavored Markdown !important
+
+## 评论系统
+
+# Disqus（https://disqus.com/）
+# disqus_username:
+
+# Gitalk
+gitalk:
+  enable: false    # 是否开启 Gitalk 评论
+  # clientID: f2c84e7629bb1446c1a4                            # 生成的 clientID
+  # clientSecret: ca6d6139d1e1b8c43f8b2e19492ddcac8b322d0d    # 生成的 clientSecret
+  # repo: Eicmlye.github.io    # 仓库名称
+  # owner: Eicmlye    # GitHub 用户名
+  # admin: Eicmlye
+  # distractionFreeMode: true # 是否启用类似 FB 的阴影遮罩
+
+## 统计
+
+# Analytics settings
+# Baidu Analytics
+ba_track_id:
+
+# Google Analytics
+ga_track_id: ''            # Format: UA-xxxxxx-xx
+ga_domain: auto              # 默认的是 auto, 也可改为自定义的域名
+
+# Featured Tags
+featured-tags: true                     # 是否使用首页标签
+featured-condition-size: 1              # 相同标签数量大于这个数, 才会出现在首页
+
+# Progressive Web Apps
+chrome-tab-theme-color: "#000000"
+service-worker: true
+
+# Friends
+friends: [
+    {
+        title: "Eicmlye",
+        href: "http://Eicmlye.github.io"
+    }
+]
