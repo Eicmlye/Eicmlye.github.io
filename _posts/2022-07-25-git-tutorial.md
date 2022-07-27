@@ -10,9 +10,17 @@ tags:
     - Git
 ---
 
-> 最近更新于 2022 年 7 月 25 日.
+> 最近更新于 2022 年 7 月 27 日.
 
 ---
+
+## 0. 术语
+
+未追踪文件 (untracked files): 新建的、从未加入过暂存区的文件.
+
+未加入暂存区的文件 (unstaged files): 已加入过暂存区并被修改了的文件, 或分支中原有的并被修改了的文件.
+
+忽略的文件 (ignored files): .gitignore 中包含的文件.
 
 ## 1. 安装初始化
 
@@ -31,13 +39,15 @@ tags:
 
 **注意:** 切勿泄露私钥 `id_rsa`.
 
-## 2. 版本库初始化
+## 2. 本地版本库初始化
 
     $ cd REPO_PATH
     $ mkdir REPO_NAME
     $ cd REPO_NAME
     $ git init
     Initialized empty Git repository in /REPO_PATH/REPO_NAME/.git/
+
+远程库初始化和库关联见 [7.1. 节](#71-关联-github-远程库).
 
 ## 3. 修改版本库
 
@@ -172,85 +182,11 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
     其中 `MD5_ID` 可在 `git reflog` 的执行结果中查找.
 
-## 6. 远程库管理
-
-### 6.1. 关联 GitHub 远程库
-
-将 [1.2.](#12-设置远程仓库-ssh-key) 中的公钥 `id_rsa.pub` 内容复制到 GitHub 账号 SSH Key, 并将 `USER_EMAIL` 设置为 GitHub 账号的**可见**邮箱. 然后执行相应操作.
-
-#### 6.1.1. 本地库没有对应的远程库时
-
-在 GitHub 账号中创建同名版本库 `REPO_NAME`, 不要加入任何默认文件 (包括开源协议、`.gitignore` 文件和 `README` 文件等). 执行
-
-    $ git remote add origin https://github.com/GITHUB_USER_NAME/REPO_NAME.git
-
-或
-
-    $ git remote add origin git@github.com:GITHUB_USER_NAME/REPO_NAME.git
-
-可将本地库与远程库关联 (分别使用 `https` 协议和 `ssh` 协议传输), 其中 `origin` 是远程库的默认别名.
-
-#### 6.1.2. 新建项目创建版本库时
-
-在 GitHub 账号中创建版本库 `REPO_NAME`, 加入 `README` 文件和开源协议. 将工作目录移至存放版本库的目录后, 执行
-
-    $ git clone https://github.com/GITHUB_USER_NAME/REPO_NAME.git
-
-或
-
-    $ git clone git@github.com:GITHUB_USER_NAME/REPO_NAME.git
-
-本地将克隆远程库 `REPO_NAME` 的 `main` 分支内容 (分别使用 `https` 协议和 `ssh` 协议传输), 并将该本地目录初始化为**与对应远程库关联的**本地 Git 版本库, 远程库别名默认为 `origin` .
-
-### 6.2. 多人协作
-
-#### 6.2.1. 远程库信息
-
-执行
-
-    $ git remote
-
-以查看远程库信息, 参数 `-v` 可显示详细信息
-
-    $ git remote -v
-    origin git@github.com:GITHUB_USER_NAME/REPO_NAME.git (fetch)
-    origin git@github.com:GITHUB_USER_NAME/REPO_NAME.git (push)
-
-若无推送权限, 则不会显示相应的可推送地址.
-
-#### 6.2.2. 抓取分支
-
-- 本地无远程库对应内容时, 首先使用 `git clone` 抓取主分支到本地.
-
-        $ git clone git@github.com:GITHUB_USER_NAME/REPO_NAME.git
-
-    此时本地只能看到 `main` 分支. 若要在分支 `BRANCH_NAME` 中开发, 应在本地创建分支 `BRANCH_NAME` , 可执行
-
-        $ git checkout -b BRANCH_NAME_LOCAL REPO_NAME/BRANCH_NAME
-
-    创建与远程分支 `REPO_NAME/BRANCH_NAME` 关联的本地分支 `BRANCH_NAME_LOCAL` .
-
-- 本地库已与远程库关联, 且有未关联的待发布分支 `BRANCH_NAME_LOCAL` 时, 若需发布到远程库的 `BRANCH_NAME` 分支上, 但其它人已经更新过该分支, 则应先重新关联分支
-
-        $ git branch --set-upstream-to=REMOTE_REPO_NAME/BRANCH_NAME
-
-    然后将更新的内容拉取到本地进行合并, 解决合并冲突后推送
-
-        $ git push REMOTE_REPO_NAME BRANCH_NAME_LOCAL
-
-#### 6.2.3. 推送分支
-
-执行
-
-    $ git push -u REMOTE_REPO_NAME BRANCH_NAME_LOCAL
-
-可将本地分支 `BRANCH_NAME_LOCAL` 同步到其在远程库 `REMOTE_REPO_NAME` 中关联的分支. 参数 `-u` 将本地分支 `BRANCH_NAME_LOCAL` 与远程库分支 `main` 关联, 此后再次提交该分支无需此参数.
-
-## 7. 分支管理
+## 6. 分支管理
 
 `main` 等指针是分支的首元指针, 指向一个分支的最新发布的修改; `HEAD` 则是工作指针, 指向当前工作所处的分支的首元指针 (如 `main` ), `HEAD`指向的指针所指向的修改称为工作修改.
 
-### 7.1. 查询版本库分支信息
+### 6.1. 查询版本库分支信息
 
 执行
 
@@ -265,7 +201,7 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
 其中标*的为当前分支.
 
-### 7.2. 创建分支
+### 6.2. 创建分支
 
 创建分支的本质, 是创建一个指向工作修改的新指针, 并将 `HEAD` 指向这个新指针.
 
@@ -281,19 +217,151 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
     $ git switch -c BRANCH_NAME
 
-### 7.3. 合并、删除分支
+### 6.3. 合并、删除分支
 
 执行
 
     $ git merge BRANCH_NAME
 
-以将分支 `BRANCH_NAME` 合并到 `main` 中. 合并默认使用 Fast-forward 方式, 但用这种方式合并, 会使此后被删除的分支的合并记录丢失. 参数 `--no-ff` 可禁用该方式, 实际将创建一个 commit , 因此需要同时带上 `-m MESSAGE` .
+以将分支 `BRANCH_NAME` 合并到当前分支中. 合并默认使用 Fast-forward 方式, 但用这种方式合并, 会使此后被删除的分支的合并记录丢失.
+
+参数 `--no-ff -m MESSAGE` 可禁用 Fast-forward 方式, 实际将创建一个 commit , 因此需要同时带上 `-m MESSAGE` .
 
 执行
 
     $ git branch -d BRANCH_NAME
 
 以删除分支 `BRANCH_NAME` .
+
+## 7. 远程库管理
+
+### 7.1. 关联 GitHub 远程库
+
+将 [1.2.](#12-设置远程仓库-ssh-key) 中的公钥 `id_rsa.pub` 内容复制到 GitHub 账号 SSH Key, 并将 `USER_EMAIL` 设置为 GitHub 账号的**可见**邮箱. 然后执行相应操作.
+
+#### 7.1.1. 本地库没有对应的远程库时
+
+在 GitHub 账号中创建同名版本库 `REPO_NAME`, 不要加入任何默认文件 (包括开源协议、`.gitignore` 文件和 `README` 文件等). 执行
+
+    $ git remote add origin https://github.com/GITHUB_USER_NAME/REPO_NAME.git
+
+或
+
+    $ git remote add origin git@github.com:GITHUB_USER_NAME/REPO_NAME.git
+
+可将本地库与远程库关联 (分别使用 `https` 协议和 `ssh` 协议传输), 其中 `origin` 是远程库的默认别名.
+
+#### 7.1.2. 新建项目创建版本库时
+
+在 GitHub 账号中创建版本库 `REPO_NAME`, 加入 `README` 文件和开源协议. 将工作目录移至存放版本库的目录后, 执行
+
+    $ git clone https://github.com/GITHUB_USER_NAME/REPO_NAME.git
+
+或
+
+    $ git clone git@github.com:GITHUB_USER_NAME/REPO_NAME.git
+
+本地将克隆远程库 `REPO_NAME` 的 `main` 分支内容 (分别使用 `https` 协议和 `ssh` 协议传输), 并将该本地目录初始化为**与对应远程库关联的**本地 Git 版本库, 远程库别名默认为 `origin` .
+
+### 7.2. 多人协作
+
+#### 7.2.1. 远程库信息
+
+执行
+
+    $ git remote
+
+以查看远程库信息, 参数 `-v` 可显示详细信息
+
+    $ git remote -v
+    origin git@github.com:GITHUB_USER_NAME/REPO_NAME.git (fetch)
+    origin git@github.com:GITHUB_USER_NAME/REPO_NAME.git (push)
+
+若无推送权限, 则不会显示相应的可推送地址.
+
+#### 7.2.2. 抓取分支
+
+- 本地无远程库对应内容时, 首先使用 `git clone` 抓取主分支到本地.
+
+        $ git clone git@github.com:GITHUB_USER_NAME/REPO_NAME.git
+
+    此时本地只能看到 `main` 分支. 若要在分支 `BRANCH_NAME` 中开发, 应在本地创建分支 `BRANCH_NAME` , 可执行
+
+        $ git switch -c BRANCH_NAME_LOCAL REPO_NAME/BRANCH_NAME
+
+    创建与远程分支 `REPO_NAME/BRANCH_NAME` 关联的本地分支 `BRANCH_NAME_LOCAL` .
+
+- 本地库已与远程库关联, 且有未关联的待发布分支 `BRANCH_NAME_LOCAL` 时, 若需发布到远程库的 `BRANCH_NAME` 分支上, 但其它人已经更新过该分支, 则应先重新关联分支
+
+        $ git branch --set-upstream-to=REMOTE_REPO_NAME/BRANCH_NAME
+
+    然后将更新的内容用 `git pull` 拉取到本地进行合并, 解决冲突后推送
+
+        $ git push REMOTE_REPO_NAME BRANCH_NAME_LOCAL
+
+#### 7.2.3. 推送分支
+
+执行
+
+    $ git push -u REMOTE_REPO_NAME BRANCH_NAME_LOCAL
+
+可将本地分支 `BRANCH_NAME_LOCAL` 同步到其在远程库 `REMOTE_REPO_NAME` 中关联的分支.
+
+### 7.3. 分支布局与处理
+
+理想的多人协作分支场景应当是
+
+    main    o----------o------------o----o-----
+             \        /            /    /
+    draft     o---o--o------------o----o-------
+              |\    /            /    /
+    user1     | o--o-------o----o----/---------
+              \           /         /
+    user2       o--------o---------o-----------
+
+主分支 `main` 应当尽可能稳定, 只用于发布 Release 版本. 各协作者在各自的分支上工作, 完成后将工作合并到组长的分支或 `draft` 分支.
+
+#### 7.3.1. Bug 分支处理与保护现场
+
+Bug 处理具有临时性、紧急性的特点. Git 的工作区和暂存区是各分支共用的. 因此, 当临时需要处理 bug 而切换至 bug 分支时, 手头上的工作未完成, 需要先保存现场. 下面的操作将已追踪的文件保存到 stash list 中.
+
+    $ git stash
+    Saved working directory and index state WIP on USER_BRANCH_NAME: MD5_STASH MESSAGE
+
+若有暂时不便加入暂存区的未追踪文件, 可使用参数 `--include-untracked` 或 `-a`.
+
+**【注意**: 参数 `-u` 会将含有“未追踪且未忽略的文件”的文件夹整个删除, 应避免使用. 参见[该链接](http://web.archive.org/web/20140310215100/http://blog.icefusion.co.uk:80/git-stash-can-delete-ignored-files-git-stash-u/). **】**
+
+此时工作区和暂存区文件都会保存到 WIP 的位置, 工作区恢复到未修改的状态, 可以创建 Bug 分支, 修复后提交到 `main` 分支.
+
+    $ git switch -c issue-ID
+    ...
+    $ git add .
+    $ git commit -m "fixed bug-ID"
+    [issue-ID MD5_ISSUE] fixed bug-ID
+    $ git switch main
+    $ git merge --no-ff -m "merged bug fix ID" issue-ID
+    $ git branch -d issue-ID
+
+现在可以切换回原分支, 并恢复工作现场了.
+
+    $ git switch USER_BRANCH_NAME
+    $ git stash list
+    stash@{STASH_NUM}: WIP on USER_BRANCH_NAME: MD5_STASH MESSAGE
+
+执行
+
+    $ git stash apply stash@{STASH_NUM}
+
+恢复到指定的工作现场. 执行
+
+    $ git stash drop stash@{STASH_NUM}
+
+删除指定的工作现场记录.
+
+注意到此时工作现场仍存在 bug, 需要将刚才提交的 bug 修复复制到当前分支, 实际将创建新的 commit.
+
+    $ git cherry-pick MD5_ISSUE
 
 ## 参考文献
 
