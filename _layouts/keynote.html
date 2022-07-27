@@ -46,7 +46,12 @@ layout: default
                         {% comment %} if page.subtitle {% endcomment %}
                         <h2 class="subheading">{{ page.subtitle }}</h2>
                         {% comment %} endif {% endcomment %}
-                        <span class="meta">发布于 {{ page.date | date: "%Y-%m-%d"}}</span>
+                        <span class="meta">
+							{% if page.update-date %}
+								最近更新于 {{ page.update-date | date: "%Y-%m-%d"}}, 
+							{% endif %}
+								发布于 {{ page.post-date | date: "%Y-%m-%d"}}
+						</span>
                     </div>
                 </div>
             </div>

@@ -1,17 +1,14 @@
 ---
-layout:     post
-title:      "HTML 编程指南"
+layout:         post
+title:          "HTML 编程指南"
 subtitle:   
-date:       2022-07-26
-author:     "Eicmlye"
-header-img: "img/em-post/20220726-HTMLTutorial.jpg"
-catalog:    true
+post-date:      2022-07-26
+update-date:    
+author:         "Eicmlye"
+header-img:     "img/em-post/20220726-HTMLTutorial.jpg"
+catalog:        true
 tags:
     - HTML
----
-
-> 最近更新于 2022 年 7 月 26 日.
-
 ---
 
 ## 1. 注释

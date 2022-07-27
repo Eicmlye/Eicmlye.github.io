@@ -1,17 +1,14 @@
 ---
-layout:     post
-title:      "Git 使用指南"
+layout:         post
+title:          "Git 使用指南"
 subtitle:   
-date:       2022-07-25
-author:     "Eicmlye"
-header-img: "img/em-post/20220725-GitTutorial.jpg"
-catalog:    true
+post-date:      2022-07-25
+update-date:    2022-07-27
+author:         "Eicmlye"
+header-img:     "img/em-post/20220725-GitTutorial.jpg"
+catalog:        true
 tags:
     - Git
----
-
-> 最近更新于 2022 年 7 月 27 日.
-
 ---
 
 ## 0. 术语
