@@ -5,7 +5,7 @@
 ## In each file in site.pages, the variable "page" indicates the file itself,
   # and its own attributes can therefore be applied.
   # The attributes should be defined at the very beginning of the file,
-  # included in a pair of lines of "---". 
+  # included in a pair of lines of "---".
 
 # Site settings
 # Variables here will appear as site.var in html files
@@ -63,13 +63,13 @@ kramdown:
 
 # Gitalk
 gitalk:
-  enable: false    # true for enabling Gitalk Comments
-  # clientID: f2c84e7629bb1446c1a4                            # 生成的 clientID
-  # clientSecret: ca6d6139d1e1b8c43f8b2e19492ddcac8b322d0d    # 生成的 clientSecret
-  # repo: Eicmlye.github.io    # 仓库名称
-  # owner: Eicmlye    # GitHub 用户名
-  # admin: Eicmlye
-  # distractionFreeMode: true # 是否启用类似 FB 的阴影遮罩
+  enable: true    # true for enabling Gitalk Comments
+  clientID: 7762445e689d50621b07                            # 生成的 clientID
+  clientSecret: 7d90ed927fe36b7786ef9fa6bc97af93d000f795    # 生成的 clientSecret
+  repo: Eicmlye.github.io    # 仓库名称
+  owner: Eicmlye    # GitHub 用户名
+  admin: Eicmlye
+  distractionFreeMode: true # 是否启用类似 FB 的阴影遮罩
 
 ## 统计
 
