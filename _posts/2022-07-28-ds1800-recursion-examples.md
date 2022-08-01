@@ -3,7 +3,7 @@ layout:         post
 title:          "几个递归算法的例子"
 subtitle:   	"排列与组合"
 post-date:      2022-07-28
-update-date:    2022-07-31
+update-date:    2022-08-01
 author:         "Eicmlye"
 header-img:     "img/em-post/20220728-DS1800Example.png"
 catalog:        true
@@ -92,25 +92,26 @@ void recPermu(int* A, bool* flag, size_t size, int* arr, size_t len)
 }
 ```
 
-##### 3. 递归打印集合的幂集 (未测试)
+##### 3. 递归输出集合的幂集
 
 ```cpp
 /*
 	** note: '\0' is excluded in all the sizes below;
-	
+	** All the strings (char*) should end with '\0';
+
 	A: the original set of elements;
 	n: the size of A;
-	cur: the current permutation;
+	cur: the current permutation; the initial cur should be an empty n-string;
 	len: the size of cur;
 	ind: the index of the last element of cur in A;
 	P: the powerset;
 	size: the size of P;
 */
 
-void recPowerSet(char* A, size_t n, char* cur, size_t len, size_t ind, char** P, size_t size)
+size_t recPowerSet(char* A, size_t n, char* cur, size_t len, size_t ind, char** P, size_t size)
 {
 	// create copy of cur;
-	char* newElem = new int[len + 1];
+	char* newElem = new char[len + 1];
 	for (size_t index = 0; index < len; ++index) {
 		newElem[index] = cur[index];
 	}
@@ -119,12 +120,14 @@ void recPowerSet(char* A, size_t n, char* cur, size_t len, size_t ind, char** P,
 	P[size] = newElem;
 	++size;
 
-	for (size_t index = ind + 1; index < n; ++index) {
+	// the initial index condition is to deal with the first char of A, since size_t cannot be negative;
+	for (size_t index = ((cur[0] == '\0') ? 0 : (ind + 1)); index < n; ++index) {
 		// push a new element into cur;
 		cur[len] = A[index];
-		recPowerSet(A, n, cur, len + 1, index, P, size);
+		// size must be global, get the return value to update size;
+		size = recPowerSet(A, n, cur, len + 1, index, P, size);
 	}
 
-	return;
+	return size;
 }
 ```
