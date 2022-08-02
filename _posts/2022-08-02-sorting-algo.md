@@ -37,6 +37,7 @@ namespace QKSORT_
 	// or template functions in namespaces,
 	// the definition and declaration must be in the same file.
 	#include "qkSort.hpp"
+
 }
 
 #endif
@@ -118,6 +119,7 @@ namespace HEAPSORT_H_
 	// or template functions in namespaces,
 	// the definition and declaration must be in the same file.
 	#include "heapSort.hpp"
+	
 }
 
 #endif
