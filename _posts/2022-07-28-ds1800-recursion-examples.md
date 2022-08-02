@@ -14,18 +14,17 @@ tags:
 ##### 1. 递归打印 n 元集合 A 中元素的 k 元组合.
 
 ```cpp
-/*
-	A: the set of elements to be combined;
-	n: the size of array A;
-	cache: memorizing completed part of the current combination;
-	len: the size of cache;
-	k: number of elements to be combined to the current combination;
+//	A: the set of elements to be combined;
+//	n: the size of array A;
+//	cache: memorizing completed part of the current combination;
+//	len: the size of cache;
+//	k: number of elements to be combined to the current combination;
+//
+//	Dynamic Programming:
+//		To find all the k-combinations,
+//		one should find all the (k-1)-combinations leaded by all possible elements,
+//		i.e. the first n-k+1 elements;
 
-	Dynamic Programming:
-		To find all the k-combinations,
-		one should find all the (k-1)-combinations leaded by all possible elements,
-		i.e. the first n-k+1 elements;
-*/
 void recCombi(int* A, size_t n, int* cache, size_t len, size_t k)
 {
 	if (n >= k) { // if k-substring available, i.e. "possible leading elements";
@@ -53,13 +52,11 @@ void recCombi(int* A, size_t n, int* cache, size_t len, size_t k)
 ##### 2. 递归打印集合元素的所有全排列.
 
 ```cpp
-/*
-	A: the set of elements to be permuted;
-	flag: true if the element is already in the current permutation;
-	size: the size of A;
-	arr: the current permutation;
-	len: the size of arr;
-*/
+//	A: the set of elements to be permuted;
+//	flag: true if the element is already in the current permutation;
+//	size: the size of A;
+//	arr: the current permutation;
+//	len: the size of arr;
 
 void recPermu(int* A, bool* flag, size_t size, int* arr, size_t len)
 {
@@ -95,18 +92,16 @@ void recPermu(int* A, bool* flag, size_t size, int* arr, size_t len)
 ##### 3. 递归输出集合的幂集
 
 ```cpp
-/*
-	** note: '\0' is excluded in all the sizes below;
-	** All the strings (char*) should end with '\0';
-
-	A: the original set of elements;
-	n: the size of A;
-	cur: the current permutation; the initial cur should be an empty n-string;
-	len: the size of cur;
-	ind: the index of the last element of cur in A;
-	P: the powerset;
-	size: the size of P;
-*/
+//	** note: '\0' is excluded in all the sizes below;
+//	** All the strings (char*) should end with '\0';
+//
+//	A: the original set of elements;
+//	n: the size of A;
+//	cur: the current permutation; the initial cur should be an empty n-string;
+//	len: the size of cur;
+//	ind: the index of the last element of cur in A;
+//	P: the powerset;
+//	size: the size of P;
 
 size_t recPowerSet(char* A, size_t n, char* cur, size_t len, size_t ind, char** P, size_t size)
 {
