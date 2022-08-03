@@ -114,12 +114,6 @@ namespace QKSORT_
 
 namespace HPSORT_
 {
-	// Building process is necessary only if
-	// the original data is in non-sequential structure,
-	// and this process should be customized accordingly;
-	// template <typename ObjectHeader, typename DataType>
-	// DataType* buildHeap(ObjectHeader obj);
-
 	template <typename DataType = int>
 	void heapify(DataType* arr, size_t ind, size_t heapSize, bool (*isnotlt)(DataType, DataType));
 
@@ -143,12 +137,6 @@ namespace HPSORT_
 
 namespace HPSORT_
 {
-    // Building process is necessary only if
-    // the original data is in non-sequential structure,
-    // and this process should be customized accordingly;
-    // template <typename ObjectHeader, typename DataType>
-    // DataType* buildHeap(ObjectHeader obj) {}
-
     // arr: the heap followed by unheapified elements;
     // ind: the node to be examined;
     // heapSize: the size of the heap;
