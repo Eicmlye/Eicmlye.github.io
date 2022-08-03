@@ -29,7 +29,7 @@ sidebar-avatar: /img/em/em-avatar.jpg   # use absolute URL, seeing it's used in 
 # SNS settings
 RSS: false
 # weibo_username:
-zhihu_username:     eicmlye   # all letters in lower case
+# zhihu_username:     eicmlye   # all letters in lower case
 github_username:    Eicmlye   # case sensitive
 # facebook_username:
 # jianshu_username:
