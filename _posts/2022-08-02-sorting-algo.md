@@ -3,7 +3,7 @@ layout:         post
 title:          "排序算法模板"
 subtitle:   	"快速排序和堆排序"
 post-date:      2022-08-02
-update-date:    2022-08-03
+update-date:    2022-08-04
 author:         "Eicmlye"
 header-img:     "img/em-post/20220802-SortAlgo.jpg"
 catalog:        true
@@ -147,25 +147,27 @@ namespace HPSORT_
             return;
         }
         // check if rchild exists;
-        // notice that the data and the heap share the same array;
-        // so noRchild will avoid
+        // Notice that the data and the heap share the same array,
+        // so one should avoid
         // misswaping single-child node with elements outside the heap;
-        bool noRchild = false;
+		bool flag = false; // true for "the max child is lchild"; 
         if (2 * ind + 2 >= heapSize) { // if has no rchild;
-            noRchild = true;
+            flag = true;
         }
+		else {
+        	flag = isnotlt(arr[2 * ind + 1], arr[2 * ind + 2]);
+		}
 
-        bool flag = noRchild || isnotlt(arr[2 * ind + 1], arr[2 * ind + 2]);
         // find max child;
-        size_t temp = flag ? 2 * ind + 1 : 2 * ind + 2;
+        size_t maxChildInd = flag ? 2 * ind + 1 : 2 * ind + 2;
 
-        if (!isnotlt(arr[ind], arr[temp])) { // if non-heap, swap parent and max child;
-            arr[ind] += arr[temp];
-            arr[temp] = arr[ind] - arr[temp];
-            arr[ind] -= arr[temp];
+        if (!isnotlt(arr[ind], arr[maxChildInd])) { // if non-heap, swap parent and max child;
+            arr[ind] += arr[maxChildInd];
+            arr[maxChildInd] = arr[ind] - arr[maxChildInd];
+            arr[ind] -= arr[maxChildInd];
 
             // examine child;
-            heapify(arr, temp, heapSize, isnotlt);
+            heapify(arr, maxChildInd, heapSize, isnotlt);
         }
 
         return;
