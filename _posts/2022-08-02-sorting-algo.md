@@ -9,6 +9,7 @@ header-img:     "img/em-post/20220802-SortAlgo.jpg"
 catalog:        true
 tags:
     - 算法
+	- 排序
 ---
 
 ##### 1. 快速排序
@@ -150,7 +151,7 @@ namespace HPSORT_
         // Notice that the data and the heap share the same array,
         // so one should avoid
         // misswaping single-child node with elements outside the heap;
-		bool flag = false; // true for "the max child is lchild"; 
+		bool flag = false; // true for "the max child is lchild";
         if (2 * ind + 2 >= heapSize) { // if has no rchild;
             flag = true;
         }

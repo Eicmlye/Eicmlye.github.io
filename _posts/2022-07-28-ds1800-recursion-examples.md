@@ -9,6 +9,7 @@ header-img:     "img/em-post/20220728-DS1800Example.png"
 catalog:        true
 tags:
     - 算法
+	- 递归
 ---
 
 ##### 1. 递归打印 n 元集合 A 中元素的 k 元组合.
