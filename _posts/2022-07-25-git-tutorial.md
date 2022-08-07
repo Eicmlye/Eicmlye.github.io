@@ -222,13 +222,19 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
 以将分支 `BRANCH_NAME` 合并到当前分支中. 合并默认使用 Fast-forward 方式, 但用这种方式合并, 会使此后被删除的分支的合并记录丢失.
 
-参数 `--no-ff -m MESSAGE` 可禁用 Fast-forward 方式, 实际将创建一个 commit , 因此需要同时带上 `-m MESSAGE` . 若不带 `-m MESSAGE` , 则会添加默认信息 `Merge branch BRANCH_NAME` . 
+参数 `--no-ff -m MESSAGE` 可禁用 Fast-forward 方式, 实际将创建一个 commit , 因此需要同时带上 `-m MESSAGE` . 若不带 `-m MESSAGE` , 则会添加默认信息 `Merge branch BRANCH_NAME` .
 
 执行
 
     $ git branch -d BRANCH_NAME
 
 以删除分支 `BRANCH_NAME` .
+
+执行
+
+    $ git push REPO_NAME --delete BRANCH_NAME
+
+以删除远程库 `REPO_NAME` 中的分支 `BRANCH_NAME` . 
 
 ## 7. 远程库管理
 

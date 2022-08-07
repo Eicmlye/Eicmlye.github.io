@@ -7,8 +7,9 @@ update-date:    2022-08-01
 author:         "Eicmlye"
 header-img:     "img/em-post/20220728-DS1800Example.png"
 catalog:        true
-tags:
+tags: # for multiple tags, tabs should be replaced by spaces before '-'; 
     - 算法
+    - 递归
 ---
 
 ##### 1. 递归打印 n 元集合 A 中元素的 k 元组合.
