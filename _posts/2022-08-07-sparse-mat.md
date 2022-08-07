@@ -7,9 +7,9 @@ update-date:
 author:         "Eicmlye"
 header-img:     "img/em-post/20220807-SparseMat.jpg"
 catalog:        true
-tags:
+tags: # for multiple tags, tabs should be replaced by spaces before '-'; 
     - 算法
-	- 稀疏矩阵
+    - 稀疏矩阵
 ---
 
 ##### 1. 三元顺序表稀疏矩阵快速转置 (TC: O(n + t))

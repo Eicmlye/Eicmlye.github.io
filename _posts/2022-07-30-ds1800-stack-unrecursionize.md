@@ -7,9 +7,9 @@ update-date:
 author:         "Eicmlye"
 header-img:     "img/em-post/20220730-DS1800Example.png"
 catalog:        true
-tags:
+tags: # for multiple tags, tabs should be replaced by spaces before '-'; 
     - 算法
-	- 递归
+    - 递归
 ---
 
 ##### 1. 栈法求解 Ackermann 函数.

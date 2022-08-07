@@ -7,9 +7,9 @@ update-date:    2022-08-04
 author:         "Eicmlye"
 header-img:     "img/em-post/20220802-SortAlgo.jpg"
 catalog:        true
-tags:
+tags: # for multiple tags, tabs should be replaced by spaces before '-';
     - 算法
-	- 排序
+    - 排序
 ---
 
 ##### 1. 快速排序
