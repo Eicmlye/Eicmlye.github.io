@@ -7,7 +7,7 @@ update-date:
 author:         "Eicmlye"
 header-img:     "img/em-post/20220807-SparseMat.jpg"
 catalog:        true
-tags: # for multiple tags, tabs should be replaced by spaces before '-'; 
+tags: # for multiple tags, tabs should be replaced by spaces before '-';
     - 算法
     - 稀疏矩阵
 ---
@@ -15,17 +15,23 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 ##### 1. 三元顺序表稀疏矩阵快速转置 (TC: O(n + t))
 
 ```cpp
-struct MatNode {
+struct SparMatNode {
 	size_t row_ = 0; // from 1 to m;
 	size_t col_ = 0; // from 1 to n;
 	int data_ = 0;
 };
 
-using Matrix = MatNode*; // no header node;
+using SparMat = SparMatNode*; // no header node;
 
-Matrix fastTSpMat(Matrix mat, size_t n, size_t t)
+// mat is a m * n sparse matrix;
+// The number of non-zero elements in mat is t;
+SparMat fastTranspose(SparMat mat, size_t n, size_t t)
 {
-	Matrix result = new MatNode[t];
+	if (t == 0) { // zero matrix; 
+		return mat;
+	}
+
+	SparMat result = new SparMatNode[t];
 	size_t* numCol = new size_t[n];
 	size_t index = 0;
 	for (index = 0; index < n; ++index) {

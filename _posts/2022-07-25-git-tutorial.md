@@ -3,7 +3,7 @@ layout:         post
 title:          "Git 使用指南"
 subtitle:   
 post-date:      2022-07-25
-update-date:    2022-07-27
+update-date:    2022-08-07
 author:         "Eicmlye"
 header-img:     "img/em-post/20220725-GitTutorial.jpg"
 catalog:        true
@@ -234,7 +234,7 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
     $ git push REPO_NAME --delete BRANCH_NAME
 
-以删除远程库 `REPO_NAME` 中的分支 `BRANCH_NAME` . 
+以删除远程库 `REPO_NAME` 中的分支 `BRANCH_NAME` .
 
 ## 7. 远程库管理
 
