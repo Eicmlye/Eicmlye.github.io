@@ -3,7 +3,7 @@ layout:         post
 title:          "Git 使用指南"
 subtitle:   
 post-date:      2022-07-25
-update-date:    2022-08-07
+update-date:    2022-08-09
 author:         "Eicmlye"
 header-img:     "img/em-post/20220725-GitTutorial.jpg"
 catalog:        true
@@ -236,6 +236,22 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
 以删除远程库 `REPO_NAME` 中的分支 `BRANCH_NAME` .
 
+### 6.4. 拉取、推送分支
+
+先用 `git switch` 切换至需要拉取到或推送的分支 `BRANCH_NAME_LOCAL`.
+
+执行
+
+    $ git push REMOTE_REPO_NAME REMOTE_BRANCH_NAME
+
+以将当前分支 `BRANCH_NAME_LOCAL` 推送到远程库 `REMOTE_REPO_NAME` 的分支 `REMOTE_BRANCH_NAME` .
+
+执行
+
+    $ git pull REMOTE_REPO_NAME REMOTE_BRANCH_NAME
+
+以将远程库 `REMOTE_REPO_NAME` 的分支 `REMOTE_BRANCH_NAME` 的内容拉取到当前分支 `BRANCH_NAME_LOCAL` .
+
 ## 7. 远程库管理
 
 ### 7.1. 关联 GitHub 远程库
@@ -282,9 +298,9 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
 若无推送权限, 则不会显示相应的可推送地址.
 
-#### 7.2.2. 抓取分支
+#### 7.2.2. 拉取分支
 
-- 本地无远程库对应内容时, 首先使用 `git clone` 抓取主分支到本地.
+- 本地无远程库对应内容时, 首先使用 `git clone` 拉取主分支到本地.
 
         $ git clone git@github.com:GITHUB_USER_NAME/REPO_NAME.git
 
@@ -300,7 +316,7 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
     然后将更新的内容用 `git pull` 拉取到本地进行合并, 解决冲突后推送
 
-        $ git push REMOTE_REPO_NAME BRANCH_NAME_LOCAL
+        $ git push REMOTE_REPO_NAME BRANCH_NAME
 
 #### 7.2.3. 推送分支
 
