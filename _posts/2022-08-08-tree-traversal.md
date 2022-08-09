@@ -3,7 +3,7 @@ layout:         post
 title:          "二叉树的遍历算法"
 subtitle:   
 post-date:      2022-08-08
-update-date:    
+update-date:    2022-08-09
 author:         "Eicmlye"
 header-img:     "img/em-post/20220808-BiTreeTrav.jpg"
 catalog:        true
@@ -77,16 +77,6 @@ void postOrdTraversal(BTree<DataType> tree)
 
 	}
 	return;
-}
-```
-
-##### 2.4. 层序遍历
-
-```cpp
-template <typename DataType>
-void levOrdTraversal(BTree<DataType> tree)
-{
-
 }
 ```
 
