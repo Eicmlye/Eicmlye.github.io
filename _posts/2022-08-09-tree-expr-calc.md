@@ -89,8 +89,11 @@ int calculate(BiTree expr)
 		std::cout << '('; \
 		needRight = true; \
 	} while (0)
+
 #define PRINTRPAR std::cout << ')'
+
 #define PRINTDATA std::cout << expr->data
+
 #define PRINTOP std::cout << ' ' << expr->data << ' '
 
 static int op2prio(const char op, bool isSigned = false)
