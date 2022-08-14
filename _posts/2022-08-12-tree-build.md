@@ -66,13 +66,7 @@ BiTree buildBiTree(size_t level = 0)
 char** btree2Arr(BiTree tree)
 {
 	// queue push;
-	#define QUEPUSH(elem) \
-		do {\
-			mov = new queNode; \
-			mov->tnode = elem; \
-			rear->next = mov; \
-			rear = rear->next; \
-		} while (0)
+	#define QUEPUSH(elem) do { mov = new queNode; mov->tnode = elem; rear->next = mov; rear = rear->next; } while (0)
 
 	// queue data structure;
 	typedef struct queNode {
