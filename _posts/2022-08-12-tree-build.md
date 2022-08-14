@@ -60,6 +60,7 @@ BiTree buildBiTree(size_t level = 0)
 顺序存储下虚结点设为空指针, 整型数据转存为字符串.
 
 ```cpp
+
 #include <cmath>
 #define _CRT_SECURE_NO_WARNINGS
 
