@@ -67,11 +67,17 @@ char** btree2Arr(BiTree tree)
 {
 	// queue push;
 	#define QUEPUSH(elem) \
+
 		do {\
+
 			mov = new queNode; \
+
 			mov->tnode = elem; \
+
 			rear->next = mov; \
+
 			rear = rear->next; \
+			
 		} while (0)
 
 	// queue data structure;
