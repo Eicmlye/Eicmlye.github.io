@@ -3,7 +3,7 @@ layout:         post
 title:          "二叉树的遍历算法"
 subtitle:   
 post-date:      2022-08-08
-update-date:    2022-08-09
+update-date:    2022-08-16
 author:         "Eicmlye"
 header-img:     "img/em-post/20220808-BiTreeTrav.jpg"
 catalog:        true
@@ -29,7 +29,7 @@ using BTree = BTNode<DataType>*; // without header node;
 
 #### 1. 递归遍历
 
-##### 2.1. 先序遍历
+##### 1.1. 先序遍历
 
 ```cpp
 template <typename DataType>
@@ -46,7 +46,7 @@ void preOrdTraversal(BTree<DataType> tree)
 }
 ```
 
-##### 2.2. 中序遍历
+##### 1.2. 中序遍历
 
 ```cpp
 template <typename DataType>
@@ -63,7 +63,7 @@ void inOrdTraversal(BTree<DataType> tree)
 }
 ```
 
-##### 2.3. 后序遍历
+##### 1.3. 后序遍历
 
 ```cpp
 template <typename DataType>
@@ -175,7 +175,7 @@ void postOrdTraversal(BTree<DataType> tree)
 				/* visit node */
 
 				stk.pop();
-				rtag = mov;
+				rtag = mov; // update rtag;
 				mov = nullptr;
 			}
 		}
@@ -198,10 +198,10 @@ void levOrdTraversal(BTree<DataType> tree)
 	queue<BTNode<DataType>*> que = {};
 	que.push(tree);
 	BTNode<DataType>* mov = nullptr;
-	visit(tree);
+	/* visit root */
 
 	while (!que.empty()) {
-		size_t len = que.size();
+		size_t len = que.size(); // freeze size;
 
 		for (size_t index = 0; index < len; ++index) {
 			mov = que.front();
@@ -220,5 +220,7 @@ void levOrdTraversal(BTree<DataType> tree)
 			que.pop();
 		}
 	}
+
+	return;
 }
 ```
