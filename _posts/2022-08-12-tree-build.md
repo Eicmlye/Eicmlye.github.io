@@ -7,7 +7,7 @@ update-date:    2022-08-16
 author:         "Eicmlye"
 header-img:     "img/em-post/20220812-BiTreeBuild.jpg"
 catalog:        true
-tags:
+tags: # for multiple tags, tabs should be replaced by spaces before '-';
     - 算法
     - 二叉树
 ---
@@ -31,7 +31,7 @@ typedef struct TreeNode {
 
 // The variable level is used for building levels
 // and does not require user input.
-// So using buildBiTree() is perfectly fine; 
+// So using buildBiTree() is perfectly fine;
 BiTree buildBiTree(size_t level = 1)
 {
 	if (level == 1) {
