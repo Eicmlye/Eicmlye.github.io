@@ -3,7 +3,7 @@ layout:         post
 title:          "二叉树链式存储和顺序存储"
 subtitle:   
 post-date:      2022-08-12
-update-date:    2022-08-16
+update-date:    2022-08-19
 author:         "Eicmlye"
 header-img:     "img/em-post/20220812-BiTreeBuild.jpg"
 catalog:        true
@@ -23,6 +23,8 @@ typedef struct TreeNode {
 ```
 
 #### 1. 链式存储初始化
+
+##### 1.1. 一般二叉树 (控制台输入)
 
 相当于读取字符串, 转存为整型数据.
 
@@ -62,6 +64,44 @@ BiTree buildBiTree(size_t level = 1)
 		std::cout << "\r\033[1A\033[K"; // 回车 (不换行), 光标上移一行 (因为输入会带一个回车), 清除当前行控制台输出;
 		return nullptr;
 	}
+}
+```
+
+##### 1.2. 正则二叉树 (由遍历序列生成)
+
+正则二叉树没有度为 1 的结点, 可以利用前序序列和后序序列生成.
+
+```cpp
+BiTree buildNormalBiTree(int* preList, int* postList, size_t preHead, size_t preTail, size_t postHead, size_t postTail)
+{
+	BiTree result = new TreeNode;
+	result->data = preList[preHead];
+
+	if (preHead != preTail) {
+		// find preList[preHead + 1] in postList;
+		size_t indL = 0;
+		for (indL = postHead; indL <= postTail; ++indL) {
+			if (postList[indL] == preList[preHead + 1]) {
+				break;
+			}
+		}
+		// find postList[postHead - 1] in preList;
+		size_t indR = 0;
+		for (indR = preHead; indR <= preTail; ++indR) {
+			if (preList[indR] == postList[postTail - 1]) {
+				break;
+			}
+		}
+
+		result->left = buildNormalBiTree(preList, postList, preHead + 1, indR - 1, postHead, indL);
+		result->right = buildNormalBiTree(preList, postList, indR, preTail, indL + 1, postTail - 1);
+	}
+	else {
+		result->left = nullptr;
+		result->right = nullptr;
+	}
+
+	return result;
 }
 ```
 
