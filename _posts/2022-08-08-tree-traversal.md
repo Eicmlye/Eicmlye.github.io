@@ -3,16 +3,16 @@ layout:         post
 title:          "二叉树的遍历算法"
 subtitle:   
 post-date:      2022-08-08
-update-date:    2022-08-16
+update-date:    2022-08-19
 author:         "Eicmlye"
 header-img:     "img/em-post/20220808-BiTreeTrav.jpg"
 catalog:        true
-tags:
+tags: # for multiple tags, tabs should be replaced by spaces before '-';
     - 算法
     - 二叉树
 ---
 
-#### 0. 数据结构
+### 0. 数据结构
 
 ```cpp
 template <typename DataType>
@@ -27,9 +27,9 @@ template <typename DataType>
 using BTree = BTNode<DataType>*; // without header node;
 ```
 
-#### 1. 递归遍历
+### 1. 递归遍历
 
-##### 1.1. 先序遍历
+#### 1.1. 先序遍历
 
 ```cpp
 template <typename DataType>
@@ -46,7 +46,7 @@ void preOrdTraversal(BTree<DataType> tree)
 }
 ```
 
-##### 1.2. 中序遍历
+#### 1.2. 中序遍历
 
 ```cpp
 template <typename DataType>
@@ -63,7 +63,7 @@ void inOrdTraversal(BTree<DataType> tree)
 }
 ```
 
-##### 1.3. 后序遍历
+#### 1.3. 后序遍历
 
 ```cpp
 template <typename DataType>
@@ -80,9 +80,11 @@ void postOrdTraversal(BTree<DataType> tree)
 }
 ```
 
-#### 2. 非递归遍历
+### 2. 非递归遍历
 
-##### 2.1. 先序遍历
+#### 2.1. 先序遍历
+
+##### 2.1.1. 栈法
 
 ```cpp
 template <typename DataType>
@@ -114,7 +116,52 @@ void preOrdTraversal(BTree<DataType> tree)
 }
 ```
 
-##### 2.2. 中序遍历
+##### 2.1.2. 孩子双亲表示法
+
+该方法需要给每个结点增加双亲指针 `TreeNode* parent` , 初值为 `nullptr` .
+
+```cpp
+void preOrdTrav(BiTree tree)
+{
+	if (tree == nullptr) {
+		return;
+	}
+
+	TreeNode* mov = tree;
+	TreeNode* pred = new TreeNode; // header indicating empty stack;
+	while (mov != tree->parent) {
+		while (mov != nullptr) {
+			/* visit node */
+			std::cout << mov->data << ' ';
+
+			mov->parent = pred;
+			pred = mov;
+			mov = mov->lchild;
+		}
+
+		// now mov == nullptr;
+		mov = pred;
+		pred = pred->parent;
+		while (mov != tree->parent && (mov->rchild == nullptr || mov->rchild->parent != nullptr)) { // non-null parent indicates that the node has been visited;
+			mov = mov->parent;
+			pred = pred->parent;
+		}
+		if (mov == tree->parent) {
+			break;
+		}
+		pred = mov;
+		mov = mov->rchild;
+	}
+
+	delete tree->parent;
+	tree->parent = nullptr;
+	std::cout << std::endl;
+
+	return;
+}
+```
+
+#### 2.2. 中序遍历
 
 ```cpp
 template <typename DataType>
@@ -146,7 +193,7 @@ void inOrdTraversal(BTree<DataType> tree)
 }
 ```
 
-##### 2.3. 后序遍历
+#### 2.3. 后序遍历
 
 ```cpp
 template <typename DataType>
@@ -185,7 +232,7 @@ void postOrdTraversal(BTree<DataType> tree)
 }
 ```
 
-##### 2.4. 层序遍历
+#### 2.4. 层序遍历
 
 ```cpp
 template <typename DataType>
