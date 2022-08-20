@@ -3,7 +3,7 @@ layout:         post
 title:          "二叉树链式存储和顺序存储"
 subtitle:   
 post-date:      2022-08-12
-update-date:    2022-08-19
+update-date:    2022-08-20
 author:         "Eicmlye"
 header-img:     "img/em-post/20220812-BiTreeBuild.jpg"
 catalog:        true
@@ -17,8 +17,8 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 ```cpp
 typedef struct TreeNode {
 	int data = 0;
-	TreeNode* left = nullptr;
-	TreeNode* right = nullptr;
+	TreeNode* lchild = nullptr;
+	TreeNode* rchild = nullptr;
 } TreeNode, * BiTree;
 ```
 
@@ -36,38 +36,119 @@ typedef struct TreeNode {
 // So using buildBiTree() is perfectly fine;
 BiTree buildBiTree(size_t level = 1)
 {
+	#define CLRSTDIN \
+		do {\
+			while (getchar() != '\n') {\
+				continue; \
+			}\
+		} while (0)
+	#define INDENT(m_indsize) \
+		do {\
+			for (size_t index = 0; index < m_indsize; ++index) {\
+				std::cout << "    "; \
+			}\
+		} while (0)
+
+	// Welcome guide;
 	if (level == 1) {
 		std::cout << "A binary tree is being built. " << std::endl;
 		std::cout << "Enter data in the node after prompting, " << std::endl;
-		std::cout << "or enter any non-digit character for empty node. " << std::endl;
-		std::cout << "Root of tree: ";
+		std::cout << "or enter any non-digit character except \'\\n\' for empty node. " << std::endl << std::endl;
+		std::cout << "Root: ";
 	}
 
+	// test empty input and rewinding;
+	char temp = '\0';
+	while ((temp = getchar()) == '\n') {
+		// move back to the end of the line;
+		std::cout << "\033[1A";
+		for (size_t index = 0; index < (level - 1) * 4 + 8; ++index) {
+			std::cout << "\033[1C";
+		}
+		if (level == 1) {
+			std::cout << "\033[2D";
+		}
+	}
+	ungetc(temp, stdin);
+
+	// load in data;
 	TreeNode* node = new TreeNode;
 	if (scanf("%d", &(node->data)) == 1) {
-		for (size_t index = 0; index < level; ++index) {
-			std::cout << "    "; // 4 spaces;
+		// clear stdin for the next empty-input test;
+		CLRSTDIN;
+
+		INDENT(level);
+		std::cout << "Lchild: ";
+		node->lchild = buildBiTree(level + 1);
+		if (node->lchild == nullptr) {
+			std::cout << "\r\033[1A\033[K";
+			INDENT(level);
+			std::cout << "Lchild: NULL" << std::endl;
 		}
-		std::cout << "Lchild of " << node->data << ": ";
-		node->left = buildBiTree(level + 1);
-		for (size_t index = 0; index < level; ++index) {
-			std::cout << "    ";
+
+		INDENT(level);
+		std::cout << "Rchild: ";
+		node->rchild = buildBiTree(level + 1);
+		if (node->rchild == nullptr) {
+			std::cout << "\r\033[1A\033[K";
+			INDENT(level);
+			std::cout << "Rchild: NULL" << std::endl;
 		}
-		std::cout << "Rchild of " << node->data << ": ";
-		node->right = buildBiTree(level + 1);
+
+		if (node->lchild == nullptr && node->rchild == nullptr) {
+			std::cout << "\r\033[1A\033[K";
+			std::cout << "\r\033[1A\033[K";
+		}
+
 		return node;
 	}
-	else {
-		while (getchar() != '\n') {
-			continue;
-		}
-		std::cout << "\r\033[1A\033[K"; // 回车 (不换行), 光标上移一行 (因为输入会带一个回车), 清除当前行控制台输出;
+	else { // empty child;
+		// clear stdin for the next empty-input test;
+		CLRSTDIN;
+
+		// std::cout << "\r\033[1A\033[K";
+		// INDENT(level);
+		// std::cout << "NULL" << std::endl;
+
 		return nullptr;
 	}
 }
 ```
 
-##### 1.2. 正则二叉树 (由遍历序列生成)
+##### 1.2. 一般二叉树 (由遍历序列生成)
+
+前序序列和中序序列可以确定一棵二叉树. 
+
+```cpp
+BiTree buildPreInBiTree(int* preList, int* inList, size_t preHead, size_t preTail, size_t inHead, size_t inTail)
+{
+	TreeNode* result = new TreeNode;
+	result->data = preList[preHead];
+
+	if (preHead != preTail) {
+		// find preList[preHead] in inList;  
+		size_t indRoot = 0;
+		for (indRoot = inHead; indRoot < inTail; ++indRoot) {
+			if (preList[preHead] == inList[indRoot]) {
+				break;
+			}
+		}
+
+		result->lchild = (indRoot != inHead) ? buildPreInBiTree(preList, inList, preHead + 1, preHead + (indRoot - inHead), inHead, indRoot - 1) : nullptr;
+		result->rchild = (indRoot != inTail) ? buildPreInBiTree(preList, inList, preHead + (indRoot - inHead) + 1, preTail, indRoot + 1, inTail) : nullptr;
+	}
+
+	return result;
+}
+
+// API;
+BiTree buildBiTree(int* preList, int* inList, size_t preSize, size_t inSize)
+{
+	return buildPreInBiTree(preList, inList, 0, preSize - 1, 0, inSize - 1);
+}
+```
+
+##### 1.3. 正则二叉树 (由遍历序列生成)
 
 正则二叉树没有度为 1 的结点, 可以利用前序序列和后序序列生成.
 
