@@ -1,9 +1,9 @@
 ---
 layout:         post
-title:          "二叉树链式存储和顺序存储"
-subtitle:   
+title:          "二叉树存储方式转换"
+subtitle:   	"存储方式转换及循环输入 API"
 post-date:      2022-08-12
-update-date:    2022-08-20
+update-date:    2022-08-23
 author:         "Eicmlye"
 header-img:     "img/em-post/20220812-BiTreeBuild.jpg"
 catalog:        true
@@ -117,7 +117,9 @@ BiTree buildBiTree(size_t level = 1)
 
 ##### 1.2. 一般二叉树 (由遍历序列生成)
 
-前序序列和中序序列可以确定一棵二叉树. 
+前序序列和中序序列可以确定一棵二叉树.
+
+###### 1.2.1. 递归
 
 ```cpp
 BiTree buildPreInBiTree(int* preList, int* inList, size_t preHead, size_t preTail, size_t inHead, size_t inTail)
@@ -142,9 +144,81 @@ BiTree buildPreInBiTree(int* preList, int* inList, size_t preHead, size_t preTai
 }
 
 // API;
-BiTree buildBiTree(int* preList, int* inList, size_t preSize, size_t inSize)
+BiTree buildBiTree(int* preList, int* inList, size_t size)
 {
-	return buildPreInBiTree(preList, inList, 0, preSize - 1, 0, inSize - 1);
+	return buildPreInBiTree(preList, inList, 0, size - 1, 0, size - 1);
+}
+```
+
+###### 1.2.2. 非递归
+
+```cpp
+BiTree buildPreInBiTree(int* preList, int* inList, size_t n)
+{
+	if (n == 0) {
+		return nullptr;
+	}
+
+	size_t preInd = 0;
+	size_t inInd = 0;
+	BiTree result = new TreeNode; // header of tree; in case that the root has no lchild;
+
+	typedef struct stackNode {
+		TreeNode* tnode = nullptr;
+		stackNode* next = nullptr;
+	} stackNode, * stack;
+
+	#define STKPUSH(m_elem) do { mov = new stackNode; mov->tnode = m_elem; mov->next = stk->next; stk->next = mov; ++preInd; } while (0)
+
+	#define STKPOP do { stk->next = mov->next; delete mov; mov = stk->next; ++inInd; } while (0)
+
+	#define LBUILDPUSH(m_elem) do { m_elem = new TreeNode; m_elem->data = preList[preInd]; stk->next->tnode->lchild = m_elem; STKPUSH(m_elem); } while (0)
+
+	#define RBUILDPUSH(m_elem) do { m_elem = new TreeNode; m_elem->data = preList[preInd]; stk->next->tnode->rchild = m_elem; STKPOP; STKPUSH(m_elem); } while (0)
+
+	stack stk = new stackNode; // header of stk;
+	stackNode* mov = nullptr;
+	STKPUSH(result);
+	--preInd;
+
+	// build root;
+	TreeNode* cache = nullptr;
+	LBUILDPUSH(cache); // now preInd is the index of the preListNext of the node just having been built; we will keep this definition for preInd during the process;
+
+	// preInd will always reach n before inInd does;
+	while (preInd < n) {
+		while (preInd < n && preList[preInd] != inList[inInd]) {
+			LBUILDPUSH(cache);
+		}
+		// build leaf;
+		LBUILDPUSH(cache);
+		if (preInd == n) {
+			break;
+		}
+
+		// trace back to a node with rchild;
+		while (mov->next->tnode->data == inList[inInd + 1]) { // rchild does not exist;
+			STKPOP;
+		}
+
+		// build rchild;
+		RBUILDPUSH(cache);
+		if (preInd == n) {
+			break;
+		}
+
+		// check if lchild exists;
+		if (mov->next->tnode->data == inList[inInd + 1]) { // in inList mov->tnode is followed by an ancester root;
+			STKPOP;
+			// build rchild;
+			RBUILDPUSH(cache);
+		}
+		if (preInd == n) {
+			break;
+		}
+	}
+
+	return result->lchild;
 }
 ```
 
@@ -367,5 +441,21 @@ BiTree levBuildTree(char** arr, size_t h)
 	}
 
 	return result;
+}
+```
+
+#### 4. 循环输入构建二叉树 API
+
+```cpp
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+
+int main(void) {
+	do {
+		BiTree tree = buildBiTree();
+		/* programs */
+
+		cout << "Hit ENTER to exit. Enter any non-\'\\n\' character to build a new tree. " << endl << endl;
+	} while (getchar() != '\n');
 }
 ```
