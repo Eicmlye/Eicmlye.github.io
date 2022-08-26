@@ -3,7 +3,7 @@ layout:         post
 title:          "二叉树存储方式转换"
 subtitle:   	"存储方式转换及循环输入 API"
 post-date:      2022-08-12
-update-date:    2022-08-23
+update-date:    2022-08-25
 author:         "Eicmlye"
 header-img:     "img/em-post/20220812-BiTreeBuild.jpg"
 catalog:        true
@@ -36,18 +36,8 @@ typedef struct TreeNode {
 // So using buildBiTree() is perfectly fine;
 BiTree buildBiTree(size_t level = 1)
 {
-	#define CLRSTDIN \
-		do {\
-			while (getchar() != '\n') {\
-				continue; \
-			}\
-		} while (0)
-	#define INDENT(m_indsize) \
-		do {\
-			for (size_t index = 0; index < m_indsize; ++index) {\
-				std::cout << "    "; \
-			}\
-		} while (0)
+	#define CLRSTDIN do { while (getchar() != '\n') { continue; }} while (0)
+	#define INDENT(m_indsize) do { for (size_t index = 0; index < m_indsize; ++index) { std::cout << "    "; }} while (0)
 
 	// Welcome guide;
 	if (level == 1) {
@@ -105,10 +95,6 @@ BiTree buildBiTree(size_t level = 1)
 	else { // empty child;
 		// clear stdin for the next empty-input test;
 		CLRSTDIN;
-
-		// std::cout << "\r\033[1A\033[K";
-		// INDENT(level);
-		// std::cout << "NULL" << std::endl;
 
 		return nullptr;
 	}

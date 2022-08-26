@@ -3,7 +3,7 @@ layout:         post
 title:          "二叉树的遍历算法"
 subtitle:   
 post-date:      2022-08-08
-update-date:    2022-08-19
+update-date:    2022-08-26
 author:         "Eicmlye"
 header-img:     "img/em-post/20220808-BiTreeTrav.jpg"
 catalog:        true
@@ -25,6 +25,14 @@ class BTNode
 
 template <typename DataType>
 using BTree = BTNode<DataType>*; // without header node;
+```
+
+```cpp
+typedef struct TreeNode {
+	int data_ = 0;
+	TreeNode* lchild_ = nullptr;
+	TreeNode* rchild_ = nullptr;  
+} TreeNode, *BiTree;
 ```
 
 ### 1. 递归遍历
@@ -109,6 +117,41 @@ void preOrdTraversal(BTree<DataType> tree)
 			mov = stk.top();
 			mov = mov->rchild_;
 			stk.pop();
+		}
+	}
+
+	return;
+}
+```
+```cpp
+void preOrdTraversal(BiTree tree)
+{
+	typedef struct stackNode {
+		TreeNode* tnode_ = nullptr;
+		stackNode* next_ = nullptr;
+	} stackNode, *stack;
+
+	#define STKPUSH(m_elem) do { top = new stackNode; top->tnode_ = m_elem; top->next_ = stk->next_; stk->next_ = top; } while (0)
+	#define STKPOP do { stk->next_ = top->next_; delete top; top = stk->next_; } while (0)
+
+	stack stk = new stackNode;
+	stackNode* top = nullptr;
+
+	TreeNode* mov = tree;
+
+	while (top != nullptr || mov != nullptr) {
+		if (mov != nullptr) {
+			STKPUSH(mov);
+
+			/* visit node */
+
+			mov = mov->lchild_;
+		}
+		else {
+			mov = top->tnode_;
+			STKPOP;
+
+			mov = mov->rchild_;
 		}
 	}
 
