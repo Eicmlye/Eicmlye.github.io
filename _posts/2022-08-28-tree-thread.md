@@ -1,0 +1,198 @@
+---
+layout:         post
+title:          "线索二叉树相关算法"
+subtitle:   
+post-date:      2022-08-28
+update-date:    2022-08-29
+author:         "Eicmlye"
+header-img:     "img/em-post/20220828-BiTreeThread.jpg"
+catalog:        true
+tags: # for multiple tags, tabs should be replaced by spaces before '-';
+    - 算法
+    - 二叉树
+---
+
+#### 0. 数据结构
+
+```cpp
+typedef struct TreeNode {
+	int data = 0;
+	TreeNode* lchild = nullptr;
+	TreeNode* rchild = nullptr;
+} TreeNode, * BiTree;
+
+typedef struct ThreadTNode {
+	int data = 0;
+	bool ltag = false; // true if child is thread;
+	bool rtag = false; // true if child is thread;
+	ThreadTNode* lchild = nullptr;
+	ThreadTNode* rchild = nullptr;
+} ThreadTNode, * ThreadBTree;
+```
+
+#### 1. 线索化
+
+##### 1.1. 先序线索化
+
+```cpp
+ThreadBTree buildPreOrdThread(BiTree src)
+{
+	if (src == nullptr) {
+		return nullptr;
+	}
+
+	ThreadBTree result = new ThreadTNode;
+
+	typedef struct stackNode {
+		TreeNode* tnode = nullptr;
+		stackNode* next = nullptr;
+	} stackNode, * stack;
+
+	typedef struct ThreadStackNode {
+		ThreadTNode* tnode = nullptr;
+		ThreadStackNode* next = nullptr;
+	} ThreadStackNode, * ThreadStack;
+
+	#define STKPUSH(m_stk, m_nodeMode, m_topcache, m_tnode) do { m_topcache = new m_nodeMode; m_topcache->tnode = m_tnode; m_topcache->next = m_stk->next; m_stk->next = m_topcache; } while (0)
+	#define SRCSTKPUSH(m_tnode) STKPUSH(stkSrc, stackNode, topSrc, m_tnode)
+	#define TARSTKPUSH(m_tnode) STKPUSH(stkTar, ThreadStackNode, topTar, m_tnode)
+
+	#define STKPOP(m_stk, m_topcache) do { m_stk->next = m_topcache->next; delete m_topcache; m_topcache = m_stk->next; } while (0)
+	#define SRCSTKPOP STKPOP(stkSrc, topSrc)
+	#define TARSTKPOP STKPOP(stkTar, topTar)
+
+	stack stkSrc = new stackNode;
+	stackNode* topSrc = nullptr;
+
+	ThreadStack stkTar = new ThreadStackNode;
+	ThreadStackNode* topTar = nullptr;
+
+	TreeNode* movSrc = src;
+	ThreadTNode* movTar = result;
+	ThreadTNode* threadPred = nullptr;
+
+	while (stkSrc->next != nullptr || movSrc != nullptr) {
+		if (movSrc != nullptr) {
+			SRCSTKPUSH(movSrc);
+
+			/* visit node */
+			movTar->data = movSrc->data;
+			TARSTKPUSH(movTar);
+			// init tags;
+			movTar->ltag = (movSrc->lchild == nullptr);
+			movTar->rtag = (movSrc->rchild == nullptr);
+			// modify threads;
+			if (movTar->ltag) {
+				movTar->lchild = threadPred;
+			}
+			if (threadPred != nullptr && threadPred->rtag) {
+				threadPred->rchild = movTar;
+			}
+			// update threadPred;
+			threadPred = movTar;
+
+			movSrc = movSrc->lchild;
+			if (movSrc != nullptr) {
+				movTar->lchild = new ThreadTNode;
+				movTar = movTar->lchild;
+			}
+		}
+		else {
+			movSrc = topSrc->tnode->rchild;
+			SRCSTKPOP;
+			movTar = topTar->tnode;
+			if (movSrc != nullptr) {
+				movTar->rchild = new ThreadTNode;
+				movTar = movTar->rchild;
+			}
+			TARSTKPOP;
+		}
+	}
+
+	return result;
+}
+```
+
+#### 1.2. 中序线索化
+
+```cpp
+ThreadBTree buildInOrdThread(BiTree src)
+{
+	if (src == nullptr) {
+		return nullptr;
+	}
+
+	ThreadBTree result = new ThreadTNode;
+
+	typedef struct stackNode {
+		TreeNode* tnode = nullptr;
+		stackNode* next = nullptr;
+	} stackNode, * stack;
+
+	typedef struct ThreadStackNode {
+		ThreadTNode* tnode = nullptr;
+		ThreadStackNode* next = nullptr;
+	} ThreadStackNode, * ThreadStack;
+
+	#define STKPUSH(m_stk, m_nodeMode, m_topcache, m_tnode) do { m_topcache = new m_nodeMode; m_topcache->tnode = m_tnode; m_topcache->next = m_stk->next; m_stk->next = m_topcache; } while (0)
+	#define SRCSTKPUSH(m_tnode) STKPUSH(stkSrc, stackNode, topSrc, m_tnode)
+	#define TARSTKPUSH(m_tnode) STKPUSH(stkTar, ThreadStackNode, topTar, m_tnode)
+
+	#define STKPOP(m_stk, m_topcache) do { m_stk->next = m_topcache->next; delete m_topcache; m_topcache = m_stk->next; } while (0)
+	#define SRCSTKPOP STKPOP(stkSrc, topSrc)
+	#define TARSTKPOP STKPOP(stkTar, topTar)
+
+	stack stkSrc = new stackNode;
+	stackNode* topSrc = nullptr;
+
+	ThreadStack stkTar = new ThreadStackNode;
+	ThreadStackNode* topTar = nullptr;
+
+	TreeNode* movSrc = src;
+	ThreadTNode* movTar = result;
+	ThreadTNode* threadPred = nullptr;
+
+	while (stkSrc->next != nullptr || movSrc != nullptr) {
+		if (movSrc != nullptr) {
+			SRCSTKPUSH(movSrc);
+
+			/* visit node */
+			movTar->data = movSrc->data;
+			TARSTKPUSH(movTar);
+			// init tags;
+			movTar->ltag = (movSrc->lchild == nullptr);
+			movTar->rtag = (movSrc->rchild == nullptr);
+
+			movSrc = movSrc->lchild;
+			if (movSrc != nullptr) {
+				movTar->lchild = new ThreadTNode;
+				movTar = movTar->lchild;
+			}
+		}
+		else {
+			movSrc = topSrc->tnode;
+			movTar = topTar->tnode;
+
+			// modify threads;
+			if (movTar->ltag) {
+				movTar->lchild = threadPred;
+			}
+			if (threadPred != nullptr && threadPred->rtag) {
+				threadPred->rchild = movTar;
+			}
+			// update threadPred;
+			threadPred = movTar;
+
+			movSrc = movSrc->rchild;
+			SRCSTKPOP;
+			if (movSrc != nullptr) {
+				movTar->rchild = new ThreadTNode;
+				movTar = movTar->rchild;
+			}
+			TARSTKPOP;
+		}
+	}
+
+	return result;
+}
+```

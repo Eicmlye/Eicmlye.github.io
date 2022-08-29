@@ -3,7 +3,7 @@ layout:         post
 title:          "二叉树的遍历算法"
 subtitle:   
 post-date:      2022-08-08
-update-date:    2022-08-26
+update-date:    2022-08-28
 author:         "Eicmlye"
 header-img:     "img/em-post/20220808-BiTreeTrav.jpg"
 catalog:        true
@@ -149,9 +149,8 @@ void preOrdTraversal(BiTree tree)
 		}
 		else {
 			mov = top->tnode_;
-			STKPOP;
-
 			mov = mov->rchild_;
+			STKPOP;
 		}
 	}
 
