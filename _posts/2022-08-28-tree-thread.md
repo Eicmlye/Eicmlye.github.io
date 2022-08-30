@@ -1,9 +1,9 @@
 ---
 layout:         post
 title:          "线索二叉树相关算法"
-subtitle:   
+subtitle:   	"二叉树线索化及利用线索遍历二叉树"
 post-date:      2022-08-28
-update-date:    2022-08-29
+update-date:    2022-08-30
 author:         "Eicmlye"
 header-img:     "img/em-post/20220828-BiTreeThread.jpg"
 catalog:        true
@@ -23,8 +23,8 @@ typedef struct TreeNode {
 
 typedef struct ThreadTNode {
 	int data = 0;
-	bool ltag = false; // true if child is thread;
-	bool rtag = false; // true if child is thread;
+	bool ltag = false; // true if child is a thread;
+	bool rtag = false; // true if child is a thread;
 	ThreadTNode* lchild = nullptr;
 	ThreadTNode* rchild = nullptr;
 } ThreadTNode, * ThreadBTree;
@@ -113,7 +113,7 @@ ThreadBTree buildPreOrdThread(BiTree src)
 }
 ```
 
-#### 1.2. 中序线索化
+##### 1.2. 中序线索化
 
 ```cpp
 ThreadBTree buildInOrdThread(BiTree src)
@@ -194,5 +194,62 @@ ThreadBTree buildInOrdThread(BiTree src)
 	}
 
 	return result;
+}
+```
+
+#### 2. 利用线索二叉树遍历
+
+##### 2.1. 前序遍历中序线索二叉树
+
+```cpp
+/* 利用左子树最右结点的右线索回到根节点 */
+void preOrdTrav(ThreadBTree threadTree)
+{
+	ThreadTNode* mov = threadTree;
+	bool prevTag = false;
+	while (mov != nullptr) {
+		if (!prevTag) {
+			/* visit node */
+			std::cout << mov->data << ' ';
+		}
+
+		if (!prevTag && !mov->ltag) {
+			prevTag = mov->ltag;
+			mov = mov->lchild;
+		}
+		else {
+			prevTag = mov->rtag;
+			mov = mov->rchild;
+		}
+	}
+
+	return;
+}
+```
+
+##### 2.2. 中序遍历中序线索二叉树
+
+```cpp
+void inOrdTrav(ThreadBTree threadTree)
+{
+	ThreadTNode* mov = threadTree;
+	bool prevTag = false;
+
+	while (mov != nullptr) {
+		if (!prevTag) { // the pred of mov is its actual parent rather than simply a thread predecessor;
+			while (!mov->ltag) {
+				mov = mov->lchild;
+			}
+		}
+
+		/* visit node */
+		std::cout << mov->data << ' ';
+
+		prevTag = mov->rtag;
+		mov = mov->rchild;
+	}
+	std::cout << std::endl;
+
+	return;
 }
 ```
