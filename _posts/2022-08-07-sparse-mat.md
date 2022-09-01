@@ -1,6 +1,6 @@
 ---
 layout:         post
-title:          "稀疏矩阵算法"
+title:          "稀疏矩阵相关算法"
 subtitle:   	"快速转置"
 post-date:      2022-08-07
 update-date:    
@@ -27,7 +27,7 @@ using SparMat = SparMatNode*; // no header node;
 // The number of non-zero elements in mat is t;
 SparMat fastTranspose(SparMat mat, size_t n, size_t t)
 {
-	if (t == 0) { // zero matrix; 
+	if (t == 0) { // zero matrix;
 		return mat;
 	}
 

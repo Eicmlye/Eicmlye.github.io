@@ -7,7 +7,8 @@ update-date:    2022-08-09
 author:         "Eicmlye"
 header-img:     "img/em-post/20220725-GitTutorial.jpg"
 catalog:        true
-tags:
+tags: # for multiple tags, tabs should be replaced by spaces before '-';
+    - 教程
     - Git
 ---
 

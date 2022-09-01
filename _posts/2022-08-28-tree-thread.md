@@ -3,13 +3,13 @@ layout:         post
 title:          "线索二叉树相关算法"
 subtitle:   	"二叉树线索化及利用线索遍历二叉树"
 post-date:      2022-08-28
-update-date:    2022-08-30
+update-date:    2022-09-01
 author:         "Eicmlye"
 header-img:     "img/em-post/20220828-BiTreeThread.jpg"
 catalog:        true
 tags: # for multiple tags, tabs should be replaced by spaces before '-';
     - 算法
-    - 二叉树
+    - 线索二叉树
 ---
 
 #### 0. 数据结构
@@ -227,6 +227,48 @@ void preOrdTrav(ThreadBTree threadTree)
 }
 ```
 
+通用的思考方式是, 先找到所需遍历方式的第一个节点, 然后考察如何在给定线索二叉树中找到该遍历方式的后继. 循环即可得到结果.
+
+```cpp
+void preOrdTrav(ThreadBTree threadTree)
+{
+	if (threadTree == nullptr) {
+		return;
+	}
+
+	ThreadTNode* mov = threadTree;
+	bool prevTag = false;
+
+	// get the first node in pre-order trav.
+	// here threadTree is exactly the one we want;
+
+	// loop: visit and get next;
+	while (mov != nullptr) {
+		/* visit node */
+		std::cout << mov->data << ' ';
+
+		/* get next */
+		if (!mov->ltag) {
+			mov = mov->lchild;
+		}
+		else if (!mov->rtag) {
+			mov = mov->rchild;
+		}
+		else { // now mov->rtag == true;
+			while (mov != nullptr && mov->rtag) {
+				mov = mov->rchild; // go to root;
+			}
+			if (mov == nullptr) {
+				return;
+			}
+			mov = mov->rchild; // left subtree done, go to right subtree;
+		}
+	}
+
+	return;
+}
+```
+
 ##### 2.2. 中序遍历中序线索二叉树
 
 ```cpp
@@ -249,6 +291,104 @@ void inOrdTrav(ThreadBTree threadTree)
 		mov = mov->rchild;
 	}
 	std::cout << std::endl;
+
+	return;
+}
+```
+
+通用的思考方式是, 先找到所需遍历方式的第一个节点, 然后考察如何在给定线索二叉树中找到该遍历方式的后继. 循环即可得到结果.
+
+```cpp
+void inOrdTrav(ThreadBTree threadTree)
+{
+	ThreadTNode* mov = threadTree;
+
+	// get the first node in in-order trav.
+	while (!mov->ltag) {
+		mov = mov->lchild;
+	}
+
+	// loop: visit and get next;
+	while (mov != nullptr) {
+		/* visit node */
+		std::cout << mov->data << ' ';
+
+		if (!mov->rtag) {
+			mov = mov->rchild;
+			while (!mov->ltag) {
+				mov = mov->lchild;
+			}
+		}
+		else {
+			mov = mov->rchild;
+		}
+	}
+
+	return;
+}
+```
+
+##### 2.3. 后序遍历中序线索二叉树
+
+通用的思考方式是, 先找到所需遍历方式的第一个节点, 然后考察如何在给定线索二叉树中找到该遍历方式的后继. 循环即可得到结果.
+
+```cpp
+void postOrdTrav(ThreadBTree threadTree)
+{
+	ThreadTNode* mov = threadTree;
+	ThreadTNode* ancestor = nullptr;
+
+	// Get the first node in post-order trav.
+	// find the highest node with lchild and go to the left-most node;
+	// if node with lchild does not exist, find right-most leaf;
+	while (mov->ltag && !mov->rtag) {
+		mov = mov->rchild;
+	}
+	while (!mov->ltag) {
+		mov = mov->lchild;
+	}
+
+	// loop: visit and get next;
+	while (mov != nullptr) {
+		/* visit node */
+		std::cout << mov->data << ' ';
+
+		/* find ancestor */
+		ancestor = mov;
+		while (!ancestor->ltag) {
+			ancestor = ancestor->lchild;
+		}
+		ancestor = ancestor->lchild;
+
+		if (ancestor == nullptr || ancestor->rchild != mov) {
+			ancestor = mov;
+			while (!ancestor->rtag) {
+				ancestor = ancestor->rchild;
+			}
+			ancestor = ancestor->rchild;
+
+			if (ancestor == nullptr) {
+				return;
+			}
+			if (ancestor->rtag) {
+				mov = ancestor;
+			}
+			else {
+				mov = ancestor->rchild; // now mov is the root of the right subtree of ancestor;
+				// find the highest node with lchild and go to the left-most node;
+				// if node with lchild does not exist, find right-most leaf;
+				while (mov->ltag && !mov->rtag) {
+					mov = mov->rchild;
+				}
+				while (!mov->ltag) {
+					mov = mov->lchild;
+				}
+			}
+		}
+		else {
+			mov = ancestor;
+		}
+	}
 
 	return;
 }
