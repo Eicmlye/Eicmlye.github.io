@@ -3,7 +3,7 @@ layout:         post
 title:          "二叉树存储方式转换"
 subtitle:   	"存储方式转换及循环输入 API"
 post-date:      2022-08-12
-update-date:    2022-08-25
+update-date:    2022-09-03
 author:         "Eicmlye"
 header-img:     "img/em-post/20220812-BiTreeBuild.jpg"
 catalog:        true
@@ -64,6 +64,86 @@ BiTree buildBiTree(size_t level = 1)
 	// load in data;
 	TreeNode* node = new TreeNode;
 	if (scanf("%d", &(node->data)) == 1) {
+		// clear stdin for the next empty-input test;
+		CLRSTDIN;
+
+		INDENT(level);
+		std::cout << "Lchild: ";
+		node->lchild = buildBiTree(level + 1);
+		if (node->lchild == nullptr) {
+			std::cout << "\r\033[1A\033[K";
+			INDENT(level);
+			std::cout << "Lchild: NULL" << std::endl;
+		}
+
+		INDENT(level);
+		std::cout << "Rchild: ";
+		node->rchild = buildBiTree(level + 1);
+		if (node->rchild == nullptr) {
+			std::cout << "\r\033[1A\033[K";
+			INDENT(level);
+			std::cout << "Rchild: NULL" << std::endl;
+		}
+
+		if (node->lchild == nullptr && node->rchild == nullptr) {
+			std::cout << "\r\033[1A\033[K";
+			std::cout << "\r\033[1A\033[K";
+		}
+
+		return node;
+	}
+	else { // empty child;
+		// clear stdin for the next empty-input test;
+		CLRSTDIN;
+
+		return nullptr;
+	}
+}
+```
+
+复杂结点（带名字的数据节点）的录入如下:
+
+```cpp
+typedef struct TreeNode {
+	struct {
+		char name[21] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+		int size = 0;
+	} data;
+	TreeNode* lchild = nullptr;
+	TreeNode* rchild = nullptr;
+} TreeNode, * BiTree;
+
+BiTree buildBiTree(size_t level = 1)
+{
+	#define CLRSTDIN do { while (getchar() != '\n') { continue; }} while (0)
+	#define INDENT(m_indsize) do { for (size_t index = 0; index < m_indsize; ++index) { std::cout << "    "; }} while (0)
+
+	// Welcome guide;
+	if (level == 1) {
+		std::cout << "A binary tree is being built. " << std::endl;
+		std::cout << "Enter the name (20 char at most) and data of the node after prompting (e.g. \"nodeName 100\"), " << std::endl;
+		std::cout << "or enter \"null node\" for empty node. " << std::endl << std::endl;
+		std::cout << "The quotation marks are not neccessary for input. " << std::endl;
+		std::cout << "Root: ";
+	}
+
+	// test empty input and rewinding;
+	char temp = '\0';
+	while ((temp = getchar()) == '\n') {
+		// move back to the end of the line;
+		std::cout << "\033[1A";
+		for (size_t index = 0; index < (level - 1) * 4 + 8; ++index) {
+			std::cout << "\033[1C";
+		}
+		if (level == 1) {
+			std::cout << "\033[2D";
+		}
+	}
+	ungetc(temp, stdin);
+
+	// load in data;
+	TreeNode* node = new TreeNode;
+	if (scanf("%s %d", &(node->data.name), & (node->data.size)) == 2) {
 		// clear stdin for the next empty-input test;
 		CLRSTDIN;
 

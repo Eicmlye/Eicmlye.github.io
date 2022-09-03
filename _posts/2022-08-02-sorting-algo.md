@@ -3,7 +3,7 @@ layout:         post
 title:          "排序算法模板"
 subtitle:   	"快速排序和堆排序"
 post-date:      2022-08-02
-update-date:    2022-08-04
+update-date:    2022-09-02
 author:         "Eicmlye"
 header-img:     "img/em-post/20220802-SortAlgo.jpg"
 catalog:        true
@@ -46,8 +46,8 @@ namespace QKSORT_
 
 #ifdef QKSORT_H_
 #include <iostream>
-namespace QKSORT_
 
+namespace QKSORT_
 {
     template <typename DataType>
     size_t partition(DataType* arr, size_t head, size_t tail, bool (*isnotlt)(DataType, DataType))
