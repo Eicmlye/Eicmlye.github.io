@@ -204,3 +204,53 @@ namespace HPSORT_
 }
 #endif
 ```
+
+#### 3. 冒泡排序
+
+```cpp
+void bubbleSort(int* list, size_t size)
+{
+	for (size_t index = size - 1; index > 0; --index) {
+		for (size_t jndex = 0; jndex < index; ++jndex) {
+			if (list[jndex] > list[jndex + 1]) {
+				list[jndex] += list[jndex + 1];
+				list[jndex + 1] = list[jndex] - list[jndex + 1];
+				list[jndex] -= list[jndex + 1];
+			}
+		}
+	}
+
+	return;
+}
+```
+
+#### 4. 直接插入排序
+
+```cpp
+void insertSort(int* list, size_t size)
+{
+	for (size_t index = 0; index < size; ++index) {
+		size_t jndex = 0;
+		int cache = list[index];
+
+		/* find inserting pos */
+		while (jndex < index) {
+			if (list[index] > list[jndex]) {
+				++jndex;
+			}
+			else {
+				break;
+			}
+		}
+
+		/* shift */
+		for (size_t kndex = index; kndex > jndex; --kndex) {
+			list[kndex] = list[kndex - 1];
+		}
+		/* insert */
+		list[jndex] = cache;
+	}
+
+	return;
+}
+```
