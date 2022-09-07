@@ -1,9 +1,9 @@
 ---
 layout:         post
 title:          "排序算法模板"
-subtitle:   	"快速排序和堆排序"
+subtitle:   	
 post-date:      2022-08-02
-update-date:    2022-08-04
+update-date:    2022-09-08
 author:         "Eicmlye"
 header-img:     "img/em-post/20220802-SortAlgo.jpg"
 catalog:        true
@@ -12,7 +12,111 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
     - 排序
 ---
 
-##### 1. 快速排序
+#### 1. 插入排序
+
+##### 1.1. 直接插入排序
+
+```cpp
+void insertSort(int* list, size_t size)
+{
+	for (size_t index = 0; index < size; ++index) {
+		size_t jndex = 0;
+		int cache = list[index];
+
+		/* find inserting pos */
+		while (jndex < index) {
+			if (list[index] > list[jndex]) {
+				++jndex;
+			}
+			else {
+				break;
+			}
+		}
+
+		/* shift */
+		for (size_t kndex = index; kndex > jndex; --kndex) {
+			list[kndex] = list[kndex - 1];
+		}
+		/* insert */
+		list[jndex] = cache;
+	}
+
+	return;
+}
+```
+
+##### 1.2. 二路插入排序
+
+```cpp
+void insertSort_2part(int* list, size_t size)
+{
+	if (size == 1) {
+		return;
+	}
+
+	// now head and tail will not be identical when sorted;
+	size_t head = 0;
+	size_t tail = 0;
+	int* cache = new int[size];
+
+	// init;
+	cache[0] = list[0];
+
+	// sorting;
+	for (size_t index = 1; index < size; ++index) {
+		if (list[index] <= cache[head]) {
+			head = (head + size - 1) % size; // avoid overflow;
+			cache[head] = list[index];
+		}
+		else if (list[index] >= cache[tail]) {
+			++tail; // tail will never overflow;
+			cache[tail] = list[index];
+		}
+		else {
+			// find insert pos;
+			size_t jndex = 0;
+			for (jndex = head; cache[jndex] < list[index]; jndex = (jndex + 1) % size);
+			// shift;
+			++tail;
+			for (size_t kndex = tail; kndex != jndex; kndex = (kndex + size - 1) % size) {
+				cache[kndex] = cache[(kndex + size - 1) % size];
+			}
+			// insert;
+			cache[jndex] = list[index];
+		}
+	}
+
+	// copy;
+	for (size_t index = head; index != tail; index = (index + 1) % size) {
+		list[(index + size - head) % size] = cache[index];
+	}
+
+	return;
+}
+```
+
+#### 2. 交换排序
+
+##### 2.1. 冒泡排序
+
+```cpp
+void bubbleSort(int* list, size_t size)
+{
+	for (size_t index = size - 1; index > 0; --index) {
+		for (size_t jndex = 0; jndex < index; ++jndex) {
+			if (list[jndex] > list[jndex + 1]) {
+				list[jndex] += list[jndex + 1];
+				list[jndex + 1] = list[jndex] - list[jndex + 1];
+				list[jndex] -= list[jndex + 1];
+			}
+		}
+	}
+
+	return;
+}
+```
+
+##### 2.2. 快速排序
 
 ```cpp
 /* qkSort.h */
@@ -46,8 +150,8 @@ namespace QKSORT_
 
 #ifdef QKSORT_H_
 #include <iostream>
-namespace QKSORT_
 
+namespace QKSORT_
 {
     template <typename DataType>
     size_t partition(DataType* arr, size_t head, size_t tail, bool (*isnotlt)(DataType, DataType))
@@ -105,7 +209,9 @@ namespace QKSORT_
 #endif
 ```
 
-##### 2. 堆排序
+#### 3. 选择排序
+
+##### 3.1. 堆排序
 
 ```cpp
 /* heapSort.h */
@@ -204,3 +310,7 @@ namespace HPSORT_
 }
 #endif
 ```
+
+#### 4. 归并排序
+
+#### 5. 基数排序
