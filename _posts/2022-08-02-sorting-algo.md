@@ -3,7 +3,7 @@ layout:         post
 title:          "排序算法模板"
 subtitle:   	
 post-date:      2022-08-02
-update-date:    2022-09-08
+update-date:    2022-09-15
 author:         "Eicmlye"
 header-img:     "img/em-post/20220802-SortAlgo.jpg"
 catalog:        true
@@ -118,6 +118,12 @@ void bubbleSort(int* list, size_t size)
 
 ##### 2.2. 快速排序
 
+###### 2.2.1. 从数据中随机选取枢轴量
+
+该方法要求枢轴量必须为数据集中已存在的量, 因为递归的依据是每次划分将枢轴量放到正确的位置上.
+
+**注意**: 由于快排的不稳定性, 实际业务使用随机枢轴量容易导致 bug 无法复现的问题, 可以考虑三点取中或九点取中.
+
 ```cpp
 /* qkSort.h */
 
@@ -207,6 +213,57 @@ namespace QKSORT_
     }
 }
 #endif
+```
+
+###### 2.2.2. 任意选取枢轴量
+
+该方法允许枢轴量不为数据集中的值（如可选取平均值为枢轴量）.
+
+```cpp
+void partition(int* list, size_t& head, size_t& tail)
+{
+	// get pivot;
+	int pivot = getPivot();
+
+	// partitioning;
+	while (head < tail) {
+		while (head <= tail && list[tail] > pivot) {
+			--tail;
+		}
+
+		while (head <= tail && list[head] < pivot) {
+			++head;
+		}
+
+		if (head < tail) {
+			int cache = list[tail];
+			list[tail] = list[head];
+			list[head] = cache;
+			++head;
+			--tail;
+		}
+	}
+
+	return;
+}
+
+void quickSort(int* list, size_t head, size_t tail)
+{
+	if (head < tail) {
+		size_t backHead = head;
+		size_t frontTail = tail;
+		partition(list, backHead, frontTail);
+
+		if (head < frontTail) {
+			quickSort(list, head, frontTail);
+		}
+		if (backHead < tail) {
+			quickSort(list, backHead, tail);
+		}
+	}
+
+	return;
+}
 ```
 
 #### 3. 选择排序
