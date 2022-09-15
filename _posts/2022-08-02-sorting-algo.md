@@ -3,7 +3,7 @@ layout:         post
 title:          "排序算法模板"
 subtitle:   	
 post-date:      2022-08-02
-update-date:    2022-09-11
+update-date:    2022-09-15
 author:         "Eicmlye"
 header-img:     "img/em-post/20220802-SortAlgo.jpg"
 catalog:        true
@@ -247,7 +247,7 @@ void partition(int* list, size_t& head, size_t& tail)
 	return;
 }
 
-void quickSortAvg(int* list, size_t head, size_t tail)
+void quickSort(int* list, size_t head, size_t tail)
 {
 	if (head < tail) {
 		size_t backHead = head;
@@ -255,10 +255,10 @@ void quickSortAvg(int* list, size_t head, size_t tail)
 		partition(list, backHead, frontTail);
 
 		if (head < frontTail) {
-			quickSortAvg(list, head, frontTail);
+			quickSort(list, head, frontTail);
 		}
 		if (backHead < tail) {
-			quickSortAvg(list, backHead, tail);
+			quickSort(list, backHead, tail);
 		}
 	}
 
