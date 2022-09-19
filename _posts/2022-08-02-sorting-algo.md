@@ -12,6 +12,46 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
     - 排序
 ---
 
+#### 0. 数据结构
+
+本文中用到的数据结构定义为
+
+```cpp
+template <typename DataType>
+struct LNode {
+	DataType data;
+	LNode<DataType>* next;
+
+	LNode() : next(nullptr) { memset(&data, 0, sizeof(DataType)); };
+	LNode(DataType val) : data(val), next(nullptr) {};
+	LNode(DataType val, LNode<DataType>* p) : data(val), next(p) {};
+};
+
+template <typename DataType>
+using LinkedList = LNode<DataType>*;
+
+template <typename DataType, typename ListNodeType>
+ListNodeType* createSingleList(vector<DataType> initData, bool hasHead = true, bool isCyclic = false)
+{
+    ListNodeType* list = new ListNodeType;
+    ListNodeType* newNode = nullptr;
+
+    if (!hasHead) {
+        list->data = initData.at(0);
+    }
+    if (isCyclic) {
+        list->next = list;
+    }
+
+    for (size_t index = 0; index < ((hasHead) ? initData.size() : initData.size() - 1); ++index) {
+        newNode = new ListNodeType(initData.at(initData.size() - 1 - index), list->next);
+        list->next = newNode;
+    }
+
+    return list;
+}
+```
+
 #### 1. 插入排序
 
 ##### 1.1. 直接插入排序
@@ -120,7 +160,7 @@ void bubbleSort(int* list, size_t size)
 
 ###### 2.2.1. 从数据中随机选取枢轴量
 
-该方法要求枢轴量必须为数据集中已存在的量, 因为递归的依据是每次划分将枢轴量放到正确的位置上.
+该算法要求枢轴量必须为数据集中已存在的量, 因为递归的依据是每次划分将枢轴量放到正确的位置上.
 
 **注意**: 由于快排的不稳定性, 实际业务使用随机枢轴量容易导致 bug 无法复现的问题, 可以考虑三点取中或九点取中.
 
@@ -217,7 +257,7 @@ namespace QKSORT_
 
 ###### 2.2.2. 任意选取枢轴量
 
-该方法允许枢轴量不为数据集中的值（如可选取平均值为枢轴量）.
+该算法允许枢轴量不为数据集中的值（如可选取平均值为枢轴量）.
 
 ```cpp
 void partition(int* list, size_t& head, size_t& tail)
@@ -369,5 +409,121 @@ namespace HPSORT_
 ```
 
 #### 4. 归并排序
+
+##### 4.1. 二路归并
+
+##### 4.2. 分段二路归并
+
+该算法先将原数据集分为若干有序段, 再对这些数据段进行归并. 该算法是针对**链表**设计的. 
+
+```cpp
+LNode<int>** buildPList(LinkedList<int>& list, size_t& len)
+{
+    if (len == 0) {
+        return nullptr; 
+    }
+
+    LNode<int>* pre = list; 
+    LNode<int>* mov = list->next; 
+    LNode<int>** pList = new LNode<int>*[len];
+    len = 0; 
+
+    pList[len] = mov;
+    pre = pre->next; 
+    mov = mov->next;
+    ++len;
+
+    while (mov != nullptr) {
+        if (pre->data > mov->data) {
+            pList[len] = mov;
+            ++len;
+        }
+
+        pre = pre->next;
+        mov = mov->next;
+    }
+
+    return pList; 
+}
+
+void mergeSort(LinkedList<int>& list, size_t n)
+{
+    size_t len = n; 
+    LNode<int>** pList = buildPList(list, len); 
+    LNode<int>** cacheList = nullptr; 
+    LNode<int>* head = nullptr; 
+    LNode<int>* rear = nullptr; 
+
+    size_t index = 0; 
+    while (len != 1) {
+        index = 0; 
+        cacheList = new LNode<int>*[len / 2 + len % 2];
+        while (2 * index + 1 < len) {
+            size_t jndex = 0;
+            size_t kndex = 0;
+            head = new LNode<int>; 
+            rear = head;
+            LNode<int>* mov1 = pList[2 * index];
+            LNode<int>* mov2 = pList[2 * index + 1];
+
+            // merge pList[2 * index] and pList[2 * index + 1]; 
+            while (mov1 != nullptr && mov1 != pList[2 * index + 1] && mov2 != nullptr && mov2 != pList[2 * index + 2]) {
+                if (mov1->data <= mov2->data) {
+                    rear->next = new LNode<int>; 
+                    rear->next->data = mov1->data;
+                    mov1 = mov1->next; 
+                    rear = rear->next; 
+                }
+                else {
+                    rear->next = new LNode<int>;
+                    rear->next->data = mov2->data;
+                    mov2 = mov2->next;
+                    rear = rear->next;
+                }
+            }
+            while (mov1 != nullptr && mov1 != pList[2 * index + 1]) {
+                rear->next = new LNode<int>;
+                rear->next->data = mov1->data;
+                mov1 = mov1->next;
+                rear = rear->next;
+            }
+            while (mov2 != nullptr && mov2 != pList[2 * index + 2]) {
+                rear->next = new LNode<int>;
+                rear->next->data = mov2->data;
+                mov2 = mov2->next;
+                rear = rear->next;
+            }
+
+            // update new section to cache; 
+            cacheList[index] = head->next; 
+            delete head; 
+
+            ++index; 
+        }
+        if (2 * index < len) {
+            cacheList[index] = pList[2 * index];
+        }
+
+        // update len; 
+        len = len / 2 + len % 2;
+
+        // update cache to pList; 
+        delete[] pList; 
+        pList = new LNode<int>*[len];
+        for (size_t qndex = 0; qndex < len; ++qndex) {
+            pList[qndex] = cacheList[qndex];
+        }
+        delete[] cacheList; 
+    }
+
+    // update pList to list; 
+    for (size_t qndex = 0; qndex < len; ++qndex) {
+        list[qndex] = pList[0][qndex];
+    }
+
+    delete[] pList; 
+    return; 
+}
+```
 
 #### 5. 基数排序
