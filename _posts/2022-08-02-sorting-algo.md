@@ -3,7 +3,7 @@ layout:         post
 title:          "排序算法模板"
 subtitle:   	
 post-date:      2022-08-02
-update-date:    2022-09-15
+update-date:    2022-09-21
 author:         "Eicmlye"
 header-img:     "img/em-post/20220802-SortAlgo.jpg"
 catalog:        true
@@ -162,12 +162,11 @@ void bubbleSort(int* list, size_t size)
 
 该算法要求枢轴量必须为数据集中已存在的量, 因为递归的依据是每次划分将枢轴量放到正确的位置上.
 
-**注意**: 由于快排的不稳定性, 实际业务使用随机枢轴量容易导致 bug 无法复现的问题, 可以考虑三点取中或九点取中.
-
 ```cpp
 /* qkSort.h */
 
 #ifndef QKSORT_H_
+
 #define QKSORT_H_
 
 namespace QKSORT_
@@ -195,6 +194,7 @@ namespace QKSORT_
 /* qkSort.hpp */
 
 #ifdef QKSORT_H_
+
 #include <iostream>
 
 namespace QKSORT_
@@ -255,36 +255,86 @@ namespace QKSORT_
 #endif
 ```
 
+**注意**: 由于快排的不稳定性, 实际业务使用随机枢轴量容易导致 bug 无法复现的问题, 可以考虑三点取中或九点取中. 将待取值放入数组局部排序输出中间值即可. 
+
+```cpp
+static int findMid(int num1, int num2, int num3) 
+{
+    int arr[3] = { num1, num2, num3 };
+    if (arr[0] > arr[1]) {
+        arr[0] += arr[1];
+        arr[1] = arr[0] - arr[1];
+        arr[0] -= arr[1];
+    }
+    if (arr[1] > arr[2]) {
+        arr[1] += arr[2];
+        arr[2] = arr[1] - arr[2];
+        arr[1] -= arr[2];
+    }
+    if (arr[0] > arr[1]) {
+        arr[0] += arr[1];
+        arr[1] = arr[0] - arr[1];
+        arr[0] -= arr[1];
+    }
+
+    return arr[1]; 
+}
+```
+
 ###### 2.2.2. 任意选取枢轴量
 
-该算法允许枢轴量不为数据集中的值（如可选取平均值为枢轴量）.
+该算法允许枢轴量不为数据集中的值（如可选取平均值为枢轴量）, 但需为数据集最大值和最小值（包括端点）之间的值.
 
 ```cpp
 void partition(int* list, size_t& head, size_t& tail)
 {
-	// get pivot;
-	int pivot = getPivot();
+    // 特定的枢轴量取法可能导致2个数据分划时无限循环; 
+    // 单独处理 head + 1 == tail 的情况; 
+    if (head + 1 == tail) {
+        if (list[head] > list[tail]) {
+            list[head] += list[tail]; 
+            list[tail] = list[head] - list[tail]; 
+            list[head] -= list[tail]; 
+        }
 
-	// partitioning;
-	while (head < tail) {
-		while (head <= tail && list[tail] > pivot) {
-			--tail;
-		}
+        head += tail; 
+        tail = head - tail; 
+        head -= tail; 
 
-		while (head <= tail && list[head] < pivot) {
-			++head;
-		}
+        return; 
+    }
+    
+    // 待分划数据至少为3个时; 
+    int pivot = getPivot();
 
-		if (head < tail) {
-			int cache = list[tail];
-			list[tail] = list[head];
-			list[head] = cache;
-			++head;
-			--tail;
-		}
-	}
+    while (head < tail) {
+        while (head <= tail && list[tail] > pivot) {
+            --tail;
+        }
+        while (head <= tail && list[head] < pivot) {
+            ++head;
+        }
 
-	return;
+        if (head < tail) {
+            int cache = list[head];
+            list[head] = list[tail];
+            list[tail] = cache;
+            --tail;
+            ++head;
+        }
+
+        // 当探针在端点重合时, 判定重合值分配到哪一半数据中; 
+        if (head == tail) {
+            if (list[head] < pivot) {
+                ++head;
+            }
+            else {
+                --tail;
+            }
+        }
+    }
+
+    return; 
 }
 
 void quickSort(int* list, size_t head, size_t tail)
@@ -314,6 +364,7 @@ void quickSort(int* list, size_t head, size_t tail)
 /* heapSort.h */
 
 #ifndef HEAPSORT_H_
+
 #define HEAPSORT_H_
 
 namespace HPSORT_

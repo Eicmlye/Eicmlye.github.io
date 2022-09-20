@@ -3,7 +3,7 @@ layout:         post
 title:          "二叉树表达式解析与计算"
 subtitle:   
 post-date:      2022-08-09
-update-date:    2022-08-10
+update-date:    2022-09-21
 author:         "Eicmlye"
 header-img:     "img/em-post/20220809-BiTreeExpr.jpg"
 catalog:        true
@@ -84,11 +84,7 @@ int calculate(BiTree expr)
 ##### 3.3. 实现
 
 ```cpp
-#define PRINTLPAR \
-	do {\
-		std::cout << '('; \
-		needRight = true; \
-	} while (0)
+#define PRINTLPAR do { std::cout << '('; needRight = true; } while (0)
 
 #define PRINTRPAR std::cout << ')'
 
