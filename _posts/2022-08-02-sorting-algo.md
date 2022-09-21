@@ -3,7 +3,7 @@ layout:         post
 title:          "排序算法模板"
 subtitle:   	
 post-date:      2022-08-02
-update-date:    2022-09-21
+update-date:    2022-09-22
 author:         "Eicmlye"
 header-img:     "img/em-post/20220802-SortAlgo.jpg"
 catalog:        true
@@ -356,9 +356,122 @@ void quickSort(int* list, size_t head, size_t tail)
 }
 ```
 
+###### 2.2.3. 非递归快速排序
+
+```cpp
+void partition(int* list, size_t& head, size_t& tail)
+{
+    // 单独处理 head + 1 == tail 的情况; 
+    if (head + 1 == tail) {
+        if (list[head] > list[tail]) {
+            list[head] += list[tail]; 
+            list[tail] = list[head] - list[tail]; 
+            list[head] -= list[tail]; 
+        }
+
+        head += tail; 
+        tail = head - tail; 
+        head -= tail; 
+    }
+    else {
+        int pivot = getPivot();
+
+        while (head < tail) {
+            while (head <= tail && list[tail] > pivot) {
+                --tail;
+            }
+            while (head <= tail && list[head] < pivot) {
+                ++head;
+            }
+
+            if (head < tail) {
+                int cache = list[head];
+                list[head] = list[tail];
+                list[tail] = cache;
+                --tail;
+                ++head;
+            }
+
+            if (head == tail) {
+                if (list[head] < pivot) {
+                    ++head;
+                }
+                else {
+                    --tail;
+                }
+            }
+        }
+    }
+
+    return; 
+}
+
+void quickSort(int* list, size_t n)
+{
+    typedef struct stackNode {
+        size_t head = 0; 
+        size_t tail = 0; 
+        stackNode* next = nullptr; 
+    } stackNode, *stack;
+
+    stack stk = new stackNode; 
+    stk->next = new stackNode; 
+    stk->next->head = 0;
+    stk->next->tail = n - 1;
+
+    size_t backHead = 0; 
+    size_t frontTail = n - 1;
+    stackNode* newNode = nullptr; 
+    stackNode* cache = nullptr; 
+
+    while (stk->next != nullptr) {
+        // save top node; 
+        cache = stk->next;
+        // pop top; 
+        stk->next = stk->next->next;
+
+        backHead = cache->head;
+        frontTail = cache->tail;
+        partition(list, backHead, frontTail);
+
+        // 先右半再左半; 
+        if (backHead < cache->tail) {
+            newNode = new stackNode;
+            newNode->head = backHead;
+            newNode->tail = cache->tail;
+
+            // push into stack;
+            newNode->next = stk->next;
+            stk->next = newNode;
+        }
+        if (cache->head < frontTail) {
+            newNode = new stackNode; 
+            newNode->head = cache->head; 
+            newNode->tail = frontTail; 
+
+            // push into stack;
+            newNode->next = stk->next; 
+            stk->next = newNode;
+        }
+
+        delete cache; 
+    }
+
+    return; 
+}
+```
+
+###### 2.2.4. 快速排序搜索第 `k` 小的元素
+
 #### 3. 选择排序
 
 ##### 3.1. 堆排序
+
+这里输出的结果按降序排列. 
+
+###### 3.1.1. 构建大顶堆 （搜索第 `k` 小的元素）
+
+该部分得到的根节点即为数据集中第 `heapSize` 小的元素. 
 
 ```cpp
 /* heapSort.h */
@@ -458,6 +571,8 @@ namespace HPSORT_
 }
 #endif
 ```
+
+###### 3.1.2. 输出根节点后重建大顶堆
 
 #### 4. 归并排序
 
