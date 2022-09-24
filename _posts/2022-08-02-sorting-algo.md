@@ -3,7 +3,7 @@ layout:         post
 title:          "排序算法模板"
 subtitle:   	
 post-date:      2022-08-02
-update-date:    2022-09-22
+update-date:    2022-09-24
 author:         "Eicmlye"
 header-img:     "img/em-post/20220802-SortAlgo.jpg"
 catalog:        true
@@ -255,29 +255,30 @@ namespace QKSORT_
 #endif
 ```
 
-**注意**: 由于快排的不稳定性, 实际业务使用随机枢轴量容易导致 bug 无法复现的问题, 可以考虑三点取中或九点取中. 将待取值放入数组局部排序输出中间值即可. 
+**注意**: 由于快排的不稳定性, 实际业务使用随机枢轴量容易导致 bug 无法复现的问题, 可以考虑三点取中或九点取中. 将待取值放入数组局部排序输出中间值即可. 以**三点取中**为例: 
 
 ```cpp
-static int findMid(int num1, int num2, int num3) 
+template <typename DataType>
+static size_t findMidInd(DataType* list, size_t head, size_t tail)
 {
-    int arr[3] = { num1, num2, num3 };
-    if (arr[0] > arr[1]) {
-        arr[0] += arr[1];
-        arr[1] = arr[0] - arr[1];
-        arr[0] -= arr[1];
-    }
-    if (arr[1] > arr[2]) {
-        arr[1] += arr[2];
-        arr[2] = arr[1] - arr[2];
-        arr[1] -= arr[2];
-    }
-    if (arr[0] > arr[1]) {
-        arr[0] += arr[1];
-        arr[1] = arr[0] - arr[1];
-        arr[0] -= arr[1];
+    DataType arr[3] = { list[head], list[tail], list[head + (tail - head) / 2] };
+    size_t ind[3] = { head, tail, head + (tail - head) / 2 };
+
+    for (size_t index = 3; index > 0; --index) {
+        for (size_t jndex = 0; jndex < index - 1; ++jndex) {
+            if (arr[jndex] > arr[jndex + 1]) {
+                arr[jndex] += arr[jndex + 1];
+                arr[jndex + 1] = arr[jndex] - arr[jndex + 1];
+                arr[jndex] -= arr[jndex + 1];
+
+                ind[jndex] += ind[jndex + 1];
+                ind[jndex + 1] = ind[jndex] - ind[jndex + 1];
+                ind[jndex] -= ind[jndex + 1];
+            }
+        }
     }
 
-    return arr[1]; 
+    return ind[1];
 }
 ```
 
@@ -289,7 +290,7 @@ static int findMid(int num1, int num2, int num3)
 void partition(int* list, size_t& head, size_t& tail)
 {
     // 特定的枢轴量取法可能导致2个数据分划时无限循环; 
-    // 单独处理 head + 1 == tail 的情况; 
+    // 故需单独处理 head + 1 == tail 的情况; 
     if (head + 1 == tail) {
         if (list[head] > list[tail]) {
             list[head] += list[tail]; 
@@ -463,116 +464,172 @@ void quickSort(int* list, size_t n)
 
 ###### 2.2.4. 快速排序搜索第 `k` 小的元素
 
+```cpp
+int qsFind(int* list, size_t head, size_t tail, size_t targetOrder)
+{
+    if (head <= tail) {
+        size_t pivotInd = partition(list, head, tail);
+
+        if (pivotInd == targetOrder - 1) {
+            return list[pivotInd]; 
+        }
+        else if (pivotInd > targetOrder - 1 && pivotInd > head) {
+            return qsFind(list, head, pivotInd - 1, targetOrder);
+        }
+        else if (pivotInd < targetOrder - 1 && pivotInd < tail) {
+            return qsFind(list, pivotInd + 1, tail, targetOrder);
+        }
+    }
+
+    return 0;
+}
+```
+
+###### 2.2.5. 单链表的快速排序
+
+本质上是按“小于枢轴”“枢轴”“大于枢轴”考虑的荷兰国旗问题, 用移动指针就可以解决. 如果不带头结点, 强行加一个就好了. 
+
 #### 3. 选择排序
 
 ##### 3.1. 堆排序
 
-这里输出的结果按降序排列. 
+###### 3.1.1. 堆排序
 
-###### 3.1.1. 构建大顶堆 （搜索第 `k` 小的元素）
-
-该部分得到的根节点即为数据集中第 `heapSize` 小的元素. 
+以大顶堆为例, 输出的顺序是降序输出, 但输出结果是升序序列. 首先构建大顶堆: 
 
 ```cpp
-/* heapSort.h */
-
-#ifndef HEAPSORT_H_
-
-#define HEAPSORT_H_
-
-namespace HPSORT_
+// suppose list[0] to list[n - 2] is already heapified; 
+// now add new element list[n - 1] and heapify list; 
+void heapify(int* list, size_t listLen)
 {
-	template <typename DataType = int>
-	void heapify(DataType* arr, size_t ind, size_t heapSize, bool (*isnotlt)(DataType, DataType));
+    if (listLen == 0) {
+        return; 
+    }
 
-	// heap sort API;
-	template <typename DataType = int>
-	void heapSort(DataType* arr, size_t size, size_t heapSize, bool (*isnotlt)(DataType, DataType) = [](DataType left, DataType right) -> bool { return left >= right; });
+    // for maxheap, parent > anotherChild; 
+    // so list[listLen] > parent is sufficient for exchanging; 
+    size_t ind = listLen - 1; 
+    while (ind != 0 && list[(ind - 1) / 2] < list[ind]) {
+        list[(ind - 1) / 2] += list[ind]; 
+        list[ind] = list[(ind - 1) / 2] - list[ind]; 
+        list[(ind - 1) / 2] -= list[ind]; 
+
+        ind = (ind - 1) / 2; 
+    }
+
+    return; 
 }
 
-// The definition and declaration
-// of template functions or
-// functions in template classes
-// must be in the same file;
-#include "heapSort.hpp"
+void buildMaxHeap(int* list, size_t listLen)
+{
+    for (size_t len = 1; len <= listLen; ++len) {
+        heapify(list, len); 
+    }
 
-#endif
+    return; 
+}
 ```
+
+然后不断输出堆顶元素至堆尾, 并将剩余元素重建为大顶堆: 
 
 ```cpp
-/* heapSort.hpp */
-#ifdef HEAPSORT_H_
-
-namespace HPSORT_
+void heapSort(int* list, size_t listLen)
 {
-    // arr: the heap followed by unheapified elements;
-    // ind: the node to be examined;
-    // heapSize: the size of the heap;
-    template <typename DataType>
-    void heapify(DataType* arr, size_t ind, size_t heapSize, bool (*isnotlt)(DataType, DataType))
-    {
-        if (2 * ind + 1 >= heapSize) { // if leaf;
-            return;
-        }
-        // check if rchild exists;
-        // Notice that the data and the heap share the same array,
-        // so one should avoid
-        // misswaping single-child node with elements outside the heap;
-		bool flag = false; // true for "the max child is lchild";
-        if (2 * ind + 2 >= heapSize) { // if has no rchild;
-            flag = true;
-        }
-		else {
-        	flag = isnotlt(arr[2 * ind + 1], arr[2 * ind + 2]);
-		}
+    for (size_t index = 0; index < listLen; ++index) {
+        // (re)build maxheap; 
+        buildMaxHeap(list, listLen - index);
 
-        // find max child;
-        size_t maxChildInd = flag ? 2 * ind + 1 : 2 * ind + 2;
-
-        if (!isnotlt(arr[ind], arr[maxChildInd])) { // if non-heap, swap parent and max child;
-            arr[ind] += arr[maxChildInd];
-            arr[maxChildInd] = arr[ind] - arr[maxChildInd];
-            arr[ind] -= arr[maxChildInd];
-
-            // examine child;
-            heapify(arr, maxChildInd, heapSize, isnotlt);
-        }
-
-        return;
+        // output local max element to the end of the heap; 
+        int cache = list[0];
+        list[0] = list[listLen - index - 1];
+        list[listLen - index - 1] = cache;
     }
 
-    // heap sort API; find the 1st-(heapSize)th min elements;
-    // arr: the heap followed by unheapified elements;
-    // size: the size of arr;
-    // heapSize: the size of the heap;
-    template <typename DataType>
-    void heapSort(DataType* arr, size_t size, size_t heapSize, bool (*isnotlt)(DataType, DataType))
-    {
-        // initialize heap;
-        for (size_t index = 0; index < heapSize; ++index) {
-            heapify(arr, heapSize - index - 1, heapSize, isnotlt);
-        }
-
-        // sorting;
-        for (size_t index = heapSize; index < size; ++index) {
-            if (!isnotlt(arr[index], arr[0])) {
-                arr[0] += arr[index];
-                arr[index] = arr[0] - arr[index];
-                arr[0] -= arr[index];
-
-                for (size_t jndex = 0; jndex < heapSize; ++jndex) {
-                    heapify(arr, heapSize - jndex - 1, heapSize, isnotlt);
-                }
-            }
-        }
-
-        return;
-    }
+    return;
 }
-#endif
 ```
 
-###### 3.1.2. 输出根节点后重建大顶堆
+###### 3.1.2. 优化重建堆的过程
+
+注意到除第一次新建堆外, 重建堆的过程实际上只需移动新的堆顶元素, 故可以优化重建过程: 
+
+```cpp
+// maxheap is spoiled by replacing heap top; 
+void rebuildMaxHeap(int* list, size_t listLen)
+{
+    // current pos of the top element; 
+    size_t ind = 0;
+
+    while (2 * ind + 1 < listLen) {
+        size_t lchildInd = 2 * ind + 1;
+        size_t rchildInd = lchildInd + 1;
+        size_t maxChildInd = (list[lchildInd] < list[(rchildInd < listLen) ? rchildInd : lchildInd]) ? rchildInd : lchildInd;
+
+        if (list[ind] >= list[maxChildInd]) {
+            break;
+        }
+
+        int cache = list[ind];
+        list[ind] = list[maxChildInd];
+        list[maxChildInd] = cache;
+
+        ind = maxChildInd; 
+    }
+
+    return;
+}
+```
+
+最终得到的堆排序如下
+
+```cpp
+void heapSort(int* list, size_t listLen)
+{
+    // build maxheap; 
+    buildMaxHeap(list, listLen);
+
+    for (size_t index = 0; index < listLen; ++index) {
+        // output local max element to the end of the heap; 
+        int cache = list[0];
+        list[0] = list[listLen - index - 1];
+        list[listLen - index - 1] = cache;
+
+        rebuildMaxHeap(list, listLen - index - 1);
+    }
+
+    return;
+}
+```
+
+###### 3.1.3. 搜索第 `k` 小的元素
+
+这里沿用[3.1.1.](#311-堆排序)节中的建堆过程 `buildMaxHeap()` 和[3.1.2.](#312-优化重建堆的过程)节中的重建过程 `rebuildMaxHeap()` . 
+
+```cpp
+// k: the function will find the k-th minimal element; 
+int hsFind(int* list, size_t listLen, size_t k)
+{
+    if (listLen < k) {
+        throw std::bad_alloc(); 
+    }
+
+    buildMaxHeap(list, k);
+
+    for (size_t index = k; index < listLen; ++index) {
+        if (list[index] >= list[0]) {
+            continue;
+        }
+
+        int cache = list[0];
+        list[0] = list[index];
+        list[index] = cache;
+
+        rebuildMaxHeap(list, k);
+    }
+
+    return list[0];
+}
+```
 
 #### 4. 归并排序
 
@@ -693,3 +750,12 @@ void mergeSort(LinkedList<int>& list, size_t n)
 ```
 
 #### 5. 基数排序
+
+
+#### 附录
+
+##### 重要内容更新日志
+
+2022-09-22 标准化了快速排序三点取中指标函数 `findMidInd` .
+
+2022-09-24 增加了[堆排序](#311-堆排序)并进行了[简单优化](#312-优化重建堆的过程), 利用新的堆排序模块重写了[搜索第 `k` 小的元素](#313-搜索第-k-小的元素)的方法. 
