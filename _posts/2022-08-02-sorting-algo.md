@@ -3,7 +3,7 @@ layout:         post
 title:          "排序算法模板"
 subtitle:   	
 post-date:      2022-08-02
-update-date:    2022-09-24
+update-date:    2022-09-29
 author:         "Eicmlye"
 header-img:     "img/em-post/20220802-SortAlgo.jpg"
 catalog:        true
@@ -495,11 +495,12 @@ int qsFind(int* list, size_t head, size_t tail, size_t targetOrder)
 
 ###### 3.1.1. 堆排序
 
-以大顶堆为例, 输出的顺序是降序输出, 但输出结果是升序序列. 首先构建大顶堆: 
+以大顶堆为例, 输出的顺序是降序输出, 但输出结果是升序序列. 首先自顶向下构建大顶堆: 
 
 ```cpp
-// suppose list[0] to list[n - 2] is already heapified; 
-// now add new element list[n - 1] and heapify list; 
+// suppose list[0] to list[listLen - 2] is already heapified; 
+// now add new element list[listLen - 1] and heapify list; 
+// time complexity O(log listLen), space complexity O(1); 
 void heapify(int* list, size_t listLen)
 {
     if (listLen == 0) {
@@ -519,6 +520,7 @@ void heapify(int* list, size_t listLen)
 
     return; 
 }
+
 
 void buildMaxHeap(int* list, size_t listLen)
 {
@@ -549,36 +551,52 @@ void heapSort(int* list, size_t listLen)
 }
 ```
 
-###### 3.1.2. 优化重建堆的过程
+###### 3.1.2. 优化建堆的过程
 
-注意到除第一次新建堆外, 重建堆的过程实际上只需移动新的堆顶元素, 故可以优化重建过程: 
+自底向上的建堆方式的时间复杂度更低（[证明](https://blog.csdn.net/USTCsunyue/article/details/111428684)）: 
 
 ```cpp
-// maxheap is spoiled by replacing heap top; 
-void rebuildMaxHeap(int* list, size_t listLen)
+void heapify(int* list, size_t listLen, size_t root)
 {
-    // current pos of the top element; 
-    size_t ind = 0;
-
-    while (2 * ind + 1 < listLen) {
-        size_t lchildInd = 2 * ind + 1;
-        size_t rchildInd = lchildInd + 1;
-        size_t maxChildInd = (list[lchildInd] < list[(rchildInd < listLen) ? rchildInd : lchildInd]) ? rchildInd : lchildInd;
-
-        if (list[ind] >= list[maxChildInd]) {
-            break;
+    while (root < listLen) {
+        if (2 * root + 1 >= listLen) {
+            return; 
         }
 
-        int cache = list[ind];
-        list[ind] = list[maxChildInd];
-        list[maxChildInd] = cache;
+        size_t lchildInd = 2 * root + 1; 
+        size_t rchildInd = lchildInd + 1; 
+        size_t maxChildInd = (list[lchildInd] < list[(rchildInd < listLen) ? rchildInd : lchildInd]) ? rchildInd : lchildInd;
 
-        ind = maxChildInd; 
+        if (list[root] >= list[maxChildInd]) {
+            return; 
+        }
+
+        list[root] += list[maxChildInd];
+        list[maxChildInd] = list[root] - list[maxChildInd];
+        list[root] -= list[maxChildInd];
+
+        root = maxChildInd; 
     }
 
-    return;
+    return; 
+}
+
+void buildMaxHeap(int* list, size_t listLen) 
+{
+    size_t index = listLen / 2; // the first leaf node; 
+
+    do {
+        --index; 
+
+        heapify(list, listLen, index); 
+
+    } while (index != 0); 
+
+    return; 
 }
 ```
+
+注意到除第一次新建堆外, 重建堆的过程实际上只需移动新的堆顶元素, 故可以在重建时直接追踪新的堆顶. 此时如果仍用原来的 `buildMaxHeap` , 其复杂度也会退化为 `O(log listLen)` , 因为只有涉及到新堆顶元素节点时才需要交换. 
 
 最终得到的堆排序如下
 
@@ -594,7 +612,7 @@ void heapSort(int* list, size_t listLen)
         list[0] = list[listLen - index - 1];
         list[listLen - index - 1] = cache;
 
-        rebuildMaxHeap(list, listLen - index - 1);
+        heapify(list, listLen - index - 1, 0);
     }
 
     return;
@@ -603,7 +621,7 @@ void heapSort(int* list, size_t listLen)
 
 ###### 3.1.3. 搜索第 `k` 小的元素
 
-这里沿用[3.1.1.](#311-堆排序)节中的建堆过程 `buildMaxHeap()` 和[3.1.2.](#312-优化重建堆的过程)节中的重建过程 `rebuildMaxHeap()` . 
+这里沿用[3.1.1.](#311-堆排序)节中的建堆过程 `buildMaxHeap()` 和[3.1.2.](#312-优化建堆的过程)节中的重建过程 `rebuildMaxHeap()` . 
 
 ```cpp
 // k: the function will find the k-th minimal element; 
@@ -624,7 +642,7 @@ int hsFind(int* list, size_t listLen, size_t k)
         list[0] = list[index];
         list[index] = cache;
 
-        rebuildMaxHeap(list, k);
+        heapify(list, k, 0);
     }
 
     return list[0];
@@ -637,7 +655,7 @@ int hsFind(int* list, size_t listLen, size_t k)
 
 ##### 4.2. 分段二路归并
 
-该算法先将原数据集分为若干有序段, 再对这些数据段进行归并. 该算法是针对**链表**设计的. 
+该算法先将原数据集分为若干有序段, 再对这些数据段进行归并. 该实现是针对**链表**设计的. 
 
 ```cpp
 LNode<int>** buildPList(LinkedList<int>& list, size_t& len)
@@ -751,6 +769,70 @@ void mergeSort(LinkedList<int>& list, size_t n)
 
 #### 5. 基数排序
 
+基数排序不依赖于比较和交换, 常用于链表排序. 
+
+```cpp
+// sortDigit: usually means the max number of digits an element can have; 
+// base: the base system in use; 
+void radixSort(LinkedList<unsigned int> list, size_t sortDigit, size_t base = 10)
+{
+    // init buckets; 
+    LinkedList<unsigned int>* buckets = new LinkedList<unsigned int>[base];
+    LNode<unsigned int>** rears = new LNode<unsigned int>*[base];
+    for (size_t index = 0; index < base; ++index) {
+        buckets[index] = new LNode<unsigned int>;
+        rears[index] = buckets[index]; 
+    }
+
+    size_t countSortedDigit = 0; 
+    while (countSortedDigit < sortDigit) {
+        while (list->next != nullptr) {
+            // find the digit to be sorted; 
+            size_t tarDigit = list->next->data; 
+            for (size_t index = 0; index < countSortedDigit; ++index) {
+                tarDigit /= base;
+            }
+            tarDigit %= base;
+
+            // push into corresponding queue; 
+            rears[tarDigit]->next = list->next;
+
+            list->next = list->next->next;
+            rears[tarDigit] = rears[tarDigit]->next;
+            
+            rears[tarDigit]->next = nullptr; 
+        }
+
+        // recombine list; 
+        LNode<unsigned int>* rear = list; 
+        for (size_t index = 0; index < base; ++index) {
+            rear->next = buckets[index]->next;
+            if (rear->next != nullptr) {
+                rear = rears[index]; 
+            }
+        }
+
+        // clear buckets and rears; 
+        for (size_t index = 0; index < base; ++index) {
+            buckets[index]->next = nullptr;
+            rears[index] = buckets[index];
+        }
+
+        ++countSortedDigit; 
+    }
+
+
+
+    // del buckets and rears; 
+    delete[] rears; 
+    for (size_t index = 0; index < base; ++index) {
+        delete buckets[index]; 
+    }
+    delete[] buckets; 
+
+    return; 
+}
+```
 
 #### 附录
 
@@ -758,4 +840,8 @@ void mergeSort(LinkedList<int>& list, size_t n)
 
 2022-09-22 标准化了快速排序三点取中指标函数 `findMidInd` .
 
-2022-09-24 增加了[堆排序](#311-堆排序)并进行了[简单优化](#312-优化重建堆的过程), 利用新的堆排序模块重写了[搜索第 `k` 小的元素](#313-搜索第-k-小的元素)的方法. 
+2022-09-24 增加了[堆排序](#311-堆排序)并进行了[简单优化](#312-优化建堆的过程), 利用新的堆排序模块重写了[搜索第 `k` 小的元素](#313-搜索第-k-小的元素)的方法. 
+
+2022-09-25 增加了自底向上的堆排序, 并修改了其它相关方法的实现. 
+
+2022-09-29 增加了[基数排序](#5-基数排序). 
