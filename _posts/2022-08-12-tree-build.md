@@ -3,7 +3,7 @@ layout:         post
 title:          "二叉树存储方式转换"
 subtitle:   	"存储方式转换及循环输入 API"
 post-date:      2022-08-12
-update-date:    2022-09-21
+update-date:    2022-10-03
 author:         "Eicmlye"
 header-img:     "img/em-post/20220812-BiTreeBuild.jpg"
 catalog:        true
@@ -96,6 +96,11 @@ BiTree buildBiTree(size_t level = 1)
 	else { // empty child;
 		// clear stdin for the next empty-input test;
 		CLRSTDIN;
+		// reprint output for null root; 
+		if (level == 1) {
+			std::cout << "\r\033[1A\033[K"; 
+			std::cout << "Root: NULL" << std::endl; 
+		}
 
 		return nullptr;
 	}
@@ -519,11 +524,25 @@ BiTree levBuildTree(char** arr, size_t h)
 #include <iostream>
 
 int main(void) {
+	char isAgain = '\n'; 
 	do {
+		if (isAgain != '\n') {
+			while (getchar() != '\n') {
+				continue; 
+			}
+		}
 		BiTree tree = buildBiTree();
 		/* programs */
+		printf(isBST(tree) ? "true\n" : "false\n");
 
-		cout << "Hit ENTER to exit. Enter any non-\'\\n\' character to build a new tree. " << endl << endl;
-	} while (getchar() != '\n');
+		printf("Hit ENTER to exit. Enter any non-\'\\n\' character to build a new tree. \n\n");
+	} while ((isAgain = getchar()) != '\n');
 }
 ```
+
+
+#### 附录
+
+##### 重要内容更新日志
+
+2022-10-03 修复了[以控制台输入](#11-一般二叉树-控制台输入)建立空树时, 根节点输入不会自动修正显示为 `NULL` 的问题. 修复了[循环输入构建二叉树](#4-循环输入构建二叉树-api)时, 从第二次开始根节点输入光标错位的问题. 
