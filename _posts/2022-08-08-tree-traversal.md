@@ -3,7 +3,7 @@ layout:         post
 title:          "二叉树的遍历算法"
 subtitle:   
 post-date:      2022-08-08
-update-date:    2022-08-28
+update-date:    2022-10-03
 author:         "Eicmlye"
 header-img:     "img/em-post/20220808-BiTreeTrav.jpg"
 catalog:        true
@@ -47,8 +47,8 @@ void preOrdTraversal(BTree<DataType> tree)
 		/* visit node */
 
 
-		preOrdTraversal(tree->lchild_);
-		preOrdTraversal(tree->rchild_);
+		preOrdTraversal<DataType>(tree->lchild_);
+		preOrdTraversal<DataType>(tree->rchild_);
 	}
 	return;
 }
@@ -61,11 +61,11 @@ template <typename DataType>
 void inOrdTraversal(BTree<DataType> tree)
 {
 	if (tree != nullptr) {
-		inOrdTraversal(tree->lchild_);
+		inOrdTraversal<DataType>(tree->lchild_);
 		/* visit node */
 
 
-		inOrdTraversal(tree->rchild_);
+		inOrdTraversal<DataType>(tree->rchild_);
 	}
 	return;
 }
@@ -78,8 +78,8 @@ template <typename DataType>
 void postOrdTraversal(BTree<DataType> tree)
 {
 	if (tree != nullptr) {
-		postOrdTraversal(tree->lchild_);
-		postOrdTraversal(tree->rchild_);
+		postOrdTraversal<DataType>(tree->lchild_);
+		postOrdTraversal<DataType>(tree->rchild_);
 		/* visit node */
 
 
@@ -221,7 +221,7 @@ void inOrdTraversal(BTree<DataType> tree)
 			stk.push(mov);
 			mov = mov->lchild_;
 		}
-		else {	// the current nullptr node is not in the stack yet;
+		else { // the current nullptr node is not in the stack yet;
 			mov = stk.top();
 
 			/* visit node */
@@ -313,3 +313,9 @@ void levOrdTraversal(BTree<DataType> tree)
 	return;
 }
 ```
+
+### 附录
+
+#### 重要内容更新日志
+
+2022-10-03 补全了递归遍历方式中缺漏的模板参数. 
