@@ -3,13 +3,13 @@ layout:         post
 title:          "二叉排序树相关算法"
 subtitle:   	
 post-date:      2022-09-01
-update-date:    2022-10-03
+update-date:    2022-10-09
 author:         "Eicmlye"
 header-img:     "img/em-post/20220901-BST.jpg"
 catalog:        true
 tags: # for multiple tags, tabs should be replaced by spaces before '-';
     - 算法
-    - 二叉排序树
+    - 二叉排序树 (BST)
 ---
 
 #### 0. 数据结构
@@ -29,7 +29,7 @@ BiTree buildBST(void)
 {
 	std::cout << "A binary search tree (BST) is being built. " << std::endl;
 	std::cout << "Enter data in the node after prompting, " << std::endl;
-	std::cout << "or enter any non-digit character except \'\\n\' to exit. " << std::endl << std::endl;
+	std::cout << "or enter any non-digit character except whitespaces to exit. " << std::endl << std::endl;
 
 	BiTree result = nullptr;
 	TreeNode* mov = nullptr;
@@ -39,7 +39,7 @@ BiTree buildBST(void)
 
 	// fill in root;
 	if (scanf("%d", &cache) == 1) {
-		result = new TreeNode; 
+		result = new TreeNode;
 		result->data = cache;
 	}
 	else {
@@ -66,8 +66,11 @@ BiTree buildBST(void)
 			}
 		}
 
-		if (mov->data == cache) {
-			delete newNode; 
+		// Notice that mov->data == cache is not an appropriate condition here, 
+		// because this will be satified in the end no matter cache is a new value or not; 
+		// Better solution is to compare the address of leaf and newNode; 
+		if (mov != newNode) {
+			delete newNode; // omit values that already exist in the BST; 
 		}
 	}
 
@@ -143,6 +146,7 @@ bool isBST(BiTree tree)
 
 ```cpp
 #include <stack>
+
 using std::stack; 
 
 bool isBST(BiTree tree)
@@ -180,8 +184,91 @@ bool isBST(BiTree tree)
 }
 ```
 
+#### 3. 删除 BST 节点
+
+```cpp
+bool delBSTNode(BiTree tree, int value)
+{
+	if (tree == nullptr) {
+		return false;
+	}
+	if (tree->data == value) {
+		printf("This function cannot deal with root deleting. \n");
+		return false;
+	}
+
+	// Now tree != nullptr;
+	TreeNode* mov = tree;
+	TreeNode* cache = tree; // temporary cache for parent; 
+	// Find node with data value;
+	while (mov != nullptr && mov->data != value) {
+		cache = mov;
+		mov = (mov->data > value ? mov->lchild : mov->rchild);
+	}
+	if (mov == nullptr) { // Target node not found;
+		return false;
+	}
+
+	// Now mov->data == value;
+	// Check children of mov and operate accordingly;
+	if (mov->lchild == nullptr && mov->rchild == nullptr) {// leaf;
+		// delete directly and done;
+		if (cache->lchild == mov) {
+			cache->lchild = nullptr;
+		}
+		else {
+			cache->rchild = nullptr; 
+		}
+
+		delete mov;
+	}
+	// Now not both children are nullptr;
+	else if (mov->lchild == nullptr) {// i.e. rchild != nullptr;
+		if (cache->lchild == mov) {
+			cache->lchild = mov->rchild;
+		}
+		else {
+			cache->rchild = mov->rchild;
+		}
+
+		delete mov;
+	}
+	else if (mov->rchild == nullptr) {// i.e. lchild != nullptr;
+		if (cache->lchild == mov) {
+			cache->lchild = mov->lchild;
+		}
+		else {
+			cache->rchild = mov->lchild;
+		}
+
+		delete mov;
+	}
+	// Now neither of its children is nullptr;
+	// Copy the value of inorder-successor of mov to mov's place;
+	// Then delete this inorder-successor; 
+	else {
+		// Find inorder-successor;
+		cache = mov->rchild; 
+		while (cache->lchild != nullptr) {
+			cache = cache->lchild;
+		}
+		// Do not update mov->data here,
+		// since delBSTNode(mov, cache->data) have to find the successor by value;
+		int temp = cache->data;
+		delBSTNode(mov, cache->data);
+
+		// Now update mov->data;
+		mov->data = temp; 
+	}
+
+	return true; 
+}
+```
+
 #### 附录
 
 ##### 重要内容更新日志
 
-2022-10-03 添加了两种 [BST 检验函数](#2-检验二叉树是否为-bst); 修复了 [BST 构造函数](#1-构造函数)中, 输入值与已有节点值相同时内存泄漏的问题. 
+2022-10-03 添加了两种 [BST 检验函数](#2-检验二叉树是否为-bst); 
+
+2022-10-05 修复了 [BST 构造函数](#1-构造函数)中, 输入值与已有节点值相同时内存泄漏的问题; 添加了 [删除 BST 节点](#3-删除-bst-节点)的方法. 

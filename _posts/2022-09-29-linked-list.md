@@ -3,7 +3,7 @@ layout:         post
 title:          "链表数据结构"
 subtitle:   	"单、双链表的结点和生成"
 post-date:      2022-09-29
-update-date:    
+update-date:    2022-10-09
 author:         "Eicmlye"
 header-img:     "img/em-post/20220929-LinkedList.jpg"
 catalog:        true
@@ -15,6 +15,7 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 
 ```cpp
 #ifndef DS_LINKEDLIST_H_
+
 #define DS_LINKEDLIST_H_
 
 template <typename DataType>
