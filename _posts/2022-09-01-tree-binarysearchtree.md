@@ -3,7 +3,7 @@ layout:         post
 title:          "二叉排序树相关算法"
 subtitle:   	
 post-date:      2022-09-01
-update-date:    2022-10-05
+update-date:    2022-10-09
 author:         "Eicmlye"
 header-img:     "img/em-post/20220901-BST.jpg"
 catalog:        true
@@ -146,6 +146,7 @@ bool isBST(BiTree tree)
 
 ```cpp
 #include <stack>
+
 using std::stack; 
 
 bool isBST(BiTree tree)

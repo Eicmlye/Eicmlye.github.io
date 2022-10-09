@@ -3,7 +3,7 @@ layout:         post
 title:          "线索二叉树相关算法"
 subtitle:   	"二叉树线索化及利用线索遍历二叉树"
 post-date:      2022-08-28
-update-date:    2022-09-01
+update-date:    2022-10-09
 author:         "Eicmlye"
 header-img:     "img/em-post/20220828-BiTreeThread.jpg"
 catalog:        true
@@ -54,11 +54,16 @@ ThreadBTree buildPreOrdThread(BiTree src)
 	} ThreadStackNode, * ThreadStack;
 
 	#define STKPUSH(m_stk, m_nodeMode, m_topcache, m_tnode) do { m_topcache = new m_nodeMode; m_topcache->tnode = m_tnode; m_topcache->next = m_stk->next; m_stk->next = m_topcache; } while (0)
+
 	#define SRCSTKPUSH(m_tnode) STKPUSH(stkSrc, stackNode, topSrc, m_tnode)
+	
 	#define TARSTKPUSH(m_tnode) STKPUSH(stkTar, ThreadStackNode, topTar, m_tnode)
 
+
 	#define STKPOP(m_stk, m_topcache) do { m_stk->next = m_topcache->next; delete m_topcache; m_topcache = m_stk->next; } while (0)
+	
 	#define SRCSTKPOP STKPOP(stkSrc, topSrc)
+	
 	#define TARSTKPOP STKPOP(stkTar, topTar)
 
 	stack stkSrc = new stackNode;
@@ -135,11 +140,16 @@ ThreadBTree buildInOrdThread(BiTree src)
 	} ThreadStackNode, * ThreadStack;
 
 	#define STKPUSH(m_stk, m_nodeMode, m_topcache, m_tnode) do { m_topcache = new m_nodeMode; m_topcache->tnode = m_tnode; m_topcache->next = m_stk->next; m_stk->next = m_topcache; } while (0)
+	
 	#define SRCSTKPUSH(m_tnode) STKPUSH(stkSrc, stackNode, topSrc, m_tnode)
+	
 	#define TARSTKPUSH(m_tnode) STKPUSH(stkTar, ThreadStackNode, topTar, m_tnode)
 
+
 	#define STKPOP(m_stk, m_topcache) do { m_stk->next = m_topcache->next; delete m_topcache; m_topcache = m_stk->next; } while (0)
+
 	#define SRCSTKPOP STKPOP(stkSrc, topSrc)
+
 	#define TARSTKPOP STKPOP(stkTar, topTar)
 
 	stack stkSrc = new stackNode;
