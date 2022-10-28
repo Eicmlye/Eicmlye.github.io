@@ -12,7 +12,7 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
     - Git
 ---
 
-## 0. 术语
+### 0. 术语
 
 未追踪文件 (untracked files): 新建的、从未加入过暂存区的文件.
 
@@ -20,14 +20,14 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 
 忽略的文件 (ignored files): .gitignore 中包含的文件.
 
-## 1. 安装初始化
+### 1. 安装初始化
 
-### 1.1. 设置用户名和邮箱
+#### 1.1. 设置用户名和邮箱
 
     $ git config --global user.name "USER_NAME"
     $ git config --global user.email "USER_EMAIL"
 
-### 1.2. 设置远程仓库 SSH Key
+#### 1.2. 设置远程仓库 SSH Key
 
 在 `C:/User/USER_NAME` 目录中查看是否有 `.ssh` 目录. 若无, 执行
 
@@ -37,7 +37,7 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 
 **注意:** 切勿泄露私钥 `id_rsa`.
 
-## 2. 本地版本库初始化
+### 2. 本地版本库初始化
 
     $ cd REPO_PATH
     $ mkdir REPO_NAME
@@ -47,7 +47,7 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 
 远程库初始化和库关联见 [7.1. 节](#71-关联-github-远程库).
 
-## 3. 修改版本库
+### 3. 修改版本库
 
 **注意:**
 1. 避免使用 Windows 自带的记事本软件编辑文本文件, 建议使用 VS Code 或 Atom.
@@ -55,7 +55,7 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 
         fatal: not a git repository (or any of the parent directories)
 
-### 3.1. 添加、修改文件
+#### 3.1. 添加、修改文件
 
 将要添加到库中的文件移动到库目录内, 或将库中要修改的文件修改后, 执行
 
@@ -68,7 +68,7 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 
     fatal: pathspec 'FILE_NAME' did not match any files
 
-### 3.2. 删除文件
+#### 3.2. 删除文件
 
 将要删除的文件先移出库或直接删除, 然后执行
 
@@ -76,7 +76,7 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 
 使修改进入暂存区.
 
-## 4. 发布修改
+### 4. 发布修改
 
 执行
 
@@ -84,9 +84,9 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 
 以发布暂存区的修改为最新版本库.
 
-## 5. 版本库状态
+### 5. 版本库状态
 
-### 5.1. 查询当前修改状态
+#### 5.1. 查询当前修改状态
 
     $ git status
 
@@ -113,7 +113,7 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
     以下修改在 `git commit` 执行后会发布至最新版本库中:
     - 第二处省略号表示已提交至暂存区的修改.
 
-### 5.2. 查询修改内容
+#### 5.2. 查询修改内容
 
     $ git diff FILE_NAME
 
@@ -124,7 +124,7 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 - 按左、右方向键向后、向前翻页
 - 按 `Q` 键退出打印 (也可能是 `Ctrl + Q` , `Shift + Q` , `ESC` 或 `Win + Q` )
 
-### 5.3. 操作回退
+#### 5.3. 操作回退
 
 - 撤销工作区中文件 `FILE_NAME` 的所有修改, 将其状态返回至最新版本库中的状态, 可执行
 
@@ -134,7 +134,7 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 
         $ git reset HEAD FILE_NAME
 
-### 5.4. 版本修改历史
+#### 5.4. 版本修改历史
 
 执行
 
@@ -156,7 +156,7 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 
 参数 `--graph` 将输出分支合并图.
 
-### 5.5. Git 操作历史记录
+#### 5.5. Git 操作历史记录
 
 执行
 
@@ -166,7 +166,7 @@ tags: # for multiple tags, tabs should be replaced by spaces before '-';
 
     MD5_ID (HEAD->main) HEAD@{NUM}: COMMAND: MESSAGE
 
-### 5.6. 版本回退
+#### 5.6. 版本回退
 
 Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个版本为 `HEAD~n`.
 
@@ -180,11 +180,11 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
     其中 `MD5_ID` 可在 `git reflog` 的执行结果中查找.
 
-## 6. 分支管理
+### 6. 分支管理
 
 `main` 等指针是分支的首元指针, 指向一个分支的最新发布的修改; `HEAD` 则是工作指针, 指向当前工作所处的分支的首元指针 (如 `main` ), `HEAD`指向的指针所指向的修改称为工作修改.
 
-### 6.1. 查询版本库分支信息
+#### 6.1. 查询版本库分支信息
 
 执行
 
@@ -199,7 +199,7 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
 其中标*的为当前分支.
 
-### 6.2. 创建分支
+#### 6.2. 创建分支
 
 创建分支的本质, 是创建一个指向工作修改的新指针, 并将 `HEAD` 指向这个新指针.
 
@@ -215,7 +215,7 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
     $ git switch -c BRANCH_NAME
 
-### 6.3. 合并、删除分支
+#### 6.3. 合并、删除分支
 
 执行
 
@@ -237,7 +237,7 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
 以删除远程库 `REPO_NAME` 中的分支 `BRANCH_NAME` .
 
-### 6.4. 拉取、推送分支
+#### 6.4. 拉取、推送分支
 
 先用 `git switch` 切换至需要拉取到或推送的分支 `BRANCH_NAME_LOCAL`.
 
@@ -253,13 +253,71 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
 以将远程库 `REMOTE_REPO_NAME` 的分支 `REMOTE_BRANCH_NAME` 的内容拉取到当前分支 `BRANCH_NAME_LOCAL` .
 
-## 7. 远程库管理
+### 7. 标签管理
 
-### 7.1. 关联 GitHub 远程库
+#### 7.1. 查看标签
+
+执行
+
+    $ git tag
+
+可查看当前分支的所有标签. 
+
+#### 7.2. 添加标签
+
+执行
+
+    $ git tag TAG_NAME
+
+将为当前分支的最新 commit 打上标签 `TAG_NAME` .
+
+执行
+
+    $ git tag -a TAG_NAME -m MESSAGE [MD5]
+
+将为 commit ID 为 `MD5` 的 commit 打上注释为 `MESSAGE` 的标签 `TAG_NAME` . 默认 commit 为当前分支的最新 commit. 
+
+#### 7.3. 推送、删除标签
+
+标签本质上是 commit 的别名, 不与分支绑定. 
+
+##### 7.3.1. 推送标签
+
+执行 
+
+    $ git push REPO_NAME TAG_NAME
+
+以推送本地标签 `TAG_NAME` 到远程库 `REPO_NAME` . 若要推送所有未推送过的标签, 可执行
+
+    $ git push REPO_NAME --tag
+
+##### 7.3.2. 删除本地标签
+
+执行
+
+    $ git tag -d TAG_NAME
+
+以删除本地标签 `TAG_NAME` . 
+
+##### 7.3.3. 删除远程库标签
+
+执行
+
+    $ git push REPO_NAME :refs/tags/TAG_NAME
+
+或
+
+    $ git push REPO_NAME --delete TAG_NAME
+
+以删除远程库 `REPO_NAME` 中的标签 `TAG_NAME` .
+
+### 8. 远程库管理
+
+#### 8.1. 关联 GitHub 远程库
 
 将 [1.2.](#12-设置远程仓库-ssh-key) 中的公钥 `id_rsa.pub` 内容复制到 GitHub 账号 SSH Key, 并将 `USER_EMAIL` 设置为 GitHub 账号的**可见**邮箱. 然后执行相应操作.
 
-#### 7.1.1. 本地库没有对应的远程库时
+##### 8.1.1. 本地库没有对应的远程库时
 
 在 GitHub 账号中创建同名版本库 `REPO_NAME`, 不要加入任何默认文件 (包括开源协议、`.gitignore` 文件和 `README` 文件等). 执行
 
@@ -271,7 +329,7 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
 可将本地库与远程库关联 (分别使用 `https` 协议和 `ssh` 协议传输), 其中 `origin` 是远程库的默认别名.
 
-#### 7.1.2. 新建项目创建版本库时
+##### 8.1.2. 新建项目创建版本库时
 
 在 GitHub 账号中创建版本库 `REPO_NAME`, 加入 `README` 文件和开源协议. 将工作目录移至存放版本库的目录后, 执行
 
@@ -283,9 +341,9 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
 本地将克隆远程库 `REPO_NAME` 的 `main` 分支内容 (分别使用 `https` 协议和 `ssh` 协议传输), 并将该本地目录初始化为**与对应远程库关联的**本地 Git 版本库, 远程库别名默认为 `origin` .
 
-### 7.2. 多人协作
+#### 8.2. 多人协作
 
-#### 7.2.1. 远程库信息
+##### 8.2.1. 远程库信息
 
 执行
 
@@ -299,7 +357,7 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
 若无推送权限, 则不会显示相应的可推送地址.
 
-#### 7.2.2. 拉取分支
+##### 8.2.2. 拉取分支
 
 - 本地无远程库对应内容时, 首先使用 `git clone` 拉取主分支到本地.
 
@@ -319,7 +377,7 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
         $ git push REMOTE_REPO_NAME BRANCH_NAME
 
-#### 7.2.3. 推送分支
+##### 8.2.3. 推送分支
 
 执行
 
@@ -327,7 +385,7 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
 可将本地分支 `BRANCH_NAME_LOCAL` 同步到其在远程库 `REMOTE_REPO_NAME` 中关联的分支.
 
-### 7.3. 分支布局与处理
+#### 8.3. 分支布局与处理
 
 理想的多人协作分支场景应当是
 
@@ -341,7 +399,7 @@ Git 中, `HEAD` 为当前版本指针, 向前1个版本为 `HEAD^`, 向前 n 个
 
 主分支 `main` 应当尽可能稳定, 只用于发布 Release 版本. 各协作者在各自的分支上工作, 完成后将工作合并到组长的分支或 `draft` 分支.
 
-#### 7.3.1. Bug 分支处理与保护现场
+##### 8.3.1. Bug 分支处理与保护现场
 
 Bug 处理具有临时性、紧急性的特点. Git 的工作区和暂存区是各分支共用的. 因此, 当临时需要处理 bug 而切换至 bug 分支时, 手头上的工作未完成, 需要先保存现场. 下面的操作将已追踪的文件保存到 stash list 中.
 
@@ -350,7 +408,7 @@ Bug 处理具有临时性、紧急性的特点. Git 的工作区和暂存区是�
 
 若有暂时不便加入暂存区的未追踪文件, 可使用参数 `--include-untracked` 或 `-a`.
 
-**【注意**: 参数 `-u` 会将含有“未追踪且未忽略的文件”的文件夹整个删除, 应避免使用. 参见[该链接](http://web.archive.org/web/20140310215100/http://blog.icefusion.co.uk:80/git-stash-can-delete-ignored-files-git-stash-u/). **】**
+**【注意**: 参数 `-u` 会将含有“未追踪且未忽略的文件”的文件夹整个删除, 应避免使用. 参见[本文](http://web.archive.org/web/20140310215100/http://blog.icefusion.co.uk:80/git-stash-can-delete-ignored-files-git-stash-u/). **】**
 
 此时工作区和暂存区文件都会保存到 WIP 的位置, 工作区恢复到未修改的状态, 可以创建 Bug 分支, 修复后提交到 `main` 分支.
 
@@ -383,6 +441,6 @@ Bug 处理具有临时性、紧急性的特点. Git 的工作区和暂存区是�
 
     $ git cherry-pick MD5_ISSUE
 
-## 参考文献
+### 参考文献
 
 <div id="liaoGit">[1] 廖雪峰. <a href="https://www.liaoxuefeng.com/wiki/896043488029600">Git 教程</a>. </div>
