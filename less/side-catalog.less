@@ -11,7 +11,7 @@
     }
     &.fold{
         .catalog-toggle::before{
-            content: ">";
+            content: "+";
         }
         .catalog-body{
             display: none;
@@ -27,7 +27,7 @@
     overflow: auto;
     height: 100%;
     padding-bottom: 40px;
-    width: 310px;
+    width: 195px;
     .catalog-body{
         position: relative;
         list-style: none;
@@ -41,7 +41,7 @@
             list-style: none;
             a{
                 padding-left: 10px;
-                max-width: 300px;
+                max-width: 180px;
                 display: inline-block;
                 vertical-align: middle;
                 height: 30px;
@@ -52,40 +52,16 @@
                 text-overflow: ellipsis;
             }
         }
-        .h1_nav{
+        .h1_nav,.h2_nav,.h3_nav{
             margin-left: 0;
-            font-size: 17px;
-            font-weight: bold;
-        }
-        .h2_nav{
-            margin-left: 0;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .h3_nav{
-            margin-left: 0;
-            font-size: 15px;
-            font-weight: bold;
-        }
-        .h4_nav{
-            margin-left: 10px;
-            font-size: 14px;
-            a{
-                max-width: 280px;
-            }
-        }
-        .h5_nav{
-            margin-left: 10px;
             font-size: 13px;
-            a{
-                max-width: 280px;
-            }
+            font-weight: bold;
         }
-        .h6_nav{
+        .h4_nav,.h5_nav,.h6_nav{
             margin-left: 10px;
             font-size: 12px;
             a{
-                max-width: 280px;
+                max-width: 170px;
             }
         }
         .active{
